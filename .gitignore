@@ -19,15 +19,12 @@ gradle-app.setting
 
 dojo-backend/gradle/
 
-dojo-backend/\.classpath
 
 dojo-backend/gradlew
 
 dojo-backend/gradlew\.bat
 
 dojo-jpa/gradle/
-
-dojo-jpa/\.classpath
 
 dojo-jpa/gradlew
 
@@ -38,8 +35,6 @@ dojo-web/bin/
 dojo-web/build/
 
 dojo-web/gradle/
-
-dojo-web/\.classpath
 
 dojo-web/gradlew
 
