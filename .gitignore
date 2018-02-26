@@ -12,3 +12,35 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+\.settings/
+
+\.project
+
+dojo-backend/gradle/
+
+dojo-backend/\.classpath
+
+dojo-backend/gradlew
+
+dojo-backend/gradlew\.bat
+
+dojo-jpa/gradle/
+
+dojo-jpa/\.classpath
+
+dojo-jpa/gradlew
+
+dojo-jpa/gradlew\.bat
+
+dojo-web/bin/
+
+dojo-web/build/
+
+dojo-web/gradle/
+
+dojo-web/\.classpath
+
+dojo-web/gradlew
+
+dojo-web/gradlew\.bat
