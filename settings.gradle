@@ -1,0 +1,2 @@
+rootProject.name = 'dojo'
+include 'dojo-jpa' ,'dojo-backend','dojo-web'
