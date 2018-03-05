@@ -1,0 +1,10 @@
+apply plugin: 'java-library'
+apply plugin: 'eclipse-wtp'
+
+dependencies {
+	compile project(':dojo-jpa')
+	provided group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+	provided group: 'javax.annotation', name: 'javax.annotation-api', version: '1.2'
+	provided group: 'javax', name: 'javaee-api', version: '8.0'
+//	testImplementation 'junit:junit:4.12'
+}

@@ -1,0 +1,12 @@
+plugins {
+	id 'nebula.provided-base' version '3.0.3' // if you want provided-base
+}
+allprojects {
+	apply plugin: 'eclipse-wtp'
+	apply plugin: 'nebula.provided-base'
+
+ 	repositories {
+		jcenter()
+		mavenCentral()
+	}
+}
