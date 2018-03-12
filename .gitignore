@@ -44,3 +44,7 @@ dojo-web/\.classpath
 dojo-web/gradlew
 
 dojo-web/gradlew\.bat
+
+dojo-jpa/bin/
+
+dojo-jpa/build/
