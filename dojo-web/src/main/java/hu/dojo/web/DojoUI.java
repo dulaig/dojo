@@ -1,6 +1,9 @@
 package hu.dojo.web;
 
+import java.util.List;
+
 import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.cdi.CDIUI;
@@ -15,12 +18,12 @@ import hu.dojo.jpa.UserAccount;
 @CDIUI("")
 public class DojoUI extends UI {
 
-	@EJB(beanName = "UserAccountDAO")
-	private IEntityDAO<UserAccount> dao;
+	@Inject
+	private UserAccountGrid grid;
 
 	@Override
-	protected void init(VaadinRequest request) {
+	protected void init(VaadinRequest request) {		
 		Label lbl = new Label("Hello vaadin");
-		setContent(lbl);
+		setContent(grid);
 	}
 }
