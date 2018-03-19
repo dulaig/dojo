@@ -2,6 +2,7 @@ package hu.dojo.backend;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 
@@ -12,7 +13,7 @@ public interface IEntityDAO<T> extends Serializable{
 
 	List<UserAccount> Label = null;
 
-	public List<T> fetchMultiple();
+	public List<T> fetchMultiple(Map<String, Object> filterData);
 
 	public T fetch(Long id);
 
