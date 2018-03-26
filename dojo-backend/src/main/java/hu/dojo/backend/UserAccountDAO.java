@@ -1,7 +1,10 @@
 package hu.dojo.backend;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,11 +19,36 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManger;
 
+	// "SELECT ua FROM UserAccount ua WHERE ua.email LIKE :email"
 	@Override
-	public List<UserAccount> fetchMultiple() {
-		TypedQuery<UserAccount> query = entityManger.createQuery("SELECT ua FROM UserAccount ua", UserAccount.class);
+	public List<UserAccount> fetchMultiple(Map<String, Object> filterData) {
+		String sql = "SELECT ua FROM UserAccount ua ";
+		if (filterData.size() > 0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				sql += "ua." + key + " LIKE :" + key + " ";
+				if (it.hasNext()) {
+					sql += " AND ";
+				}
+			}
+		}
+		TypedQuery<UserAccount> query = entityManger.createQuery(sql, UserAccount.class);
+
+		if (filterData.size() > 0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				Object value = entry.getValue();
+				query.setParameter(key, "%" + value + "%");
+			}
+		}
 		List<UserAccount> resultList = query.getResultList();
-		if(resultList == null || resultList.size() < 1) {
+		if (resultList == null || resultList.size() < 1) {
 			return new ArrayList<UserAccount>();
 		}
 		return resultList;
