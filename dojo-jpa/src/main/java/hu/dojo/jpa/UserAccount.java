@@ -9,11 +9,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_ACCOUNT")
-public class UserAccount {
+public class UserAccount extends AbstractEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Column(nullable = false, unique = true, name = "EMAIL_ADDRESS")
 	private String emailAddress;
@@ -26,14 +27,6 @@ public class UserAccount {
 
 	@Column
 	private String lastname;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getEmailAddress() {
 		return emailAddress;
@@ -66,4 +59,5 @@ public class UserAccount {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
+
 }

@@ -2,13 +2,19 @@ package hu.dojo.backend;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 
-@Local
-public interface IEntityDAO<T> extends Serializable{
+import hu.dojo.jpa.AbstractEntity;
+import hu.dojo.jpa.UserAccount;
 
-	public List<T> fetchMultiple();
+@Local
+public interface IEntityDAO<T extends AbstractEntity> extends Serializable{
+
+	List<UserAccount> Label = null;
+
+	public List<T> fetchMultiple(Map<String, Object> filterData);
 
 	public T fetch(Long id);
 
