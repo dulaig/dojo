@@ -25,28 +25,26 @@ public abstract class AbstractEntity implements Serializable{
 	private LocalDateTime creationDate;
 	@Column(name="MODIFICATION_DATE")
 	private LocalDateTime modificationDate;
+	/*@Column
+	private Long version;
 	@Column
-	private Long version;	
-	@Column
-	private boolean deleted;
+	private boolean deleted;*/
 	
-	@PrePersist /*Minden insertnél lefut*/
+	@PrePersist /*Minden insert-nél lefut*/
 	private void prePersist() {
 		creationDate = LocalDateTime.now();
 	}
-	@PreUpdate /*Minden update-nál lefut*/
+	@PreUpdate /*Minden update-nél lefut*/
 	private void preUpdate() {
 		modificationDate = LocalDateTime.now();
 	}
 	
-	
-	
-	public boolean isDeleted() {
+	/*public boolean isDeleted() {
 		return deleted;
 	}
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
-	}
+	}*/
 	public Long getId() {
 		return id;
 	}
@@ -65,10 +63,10 @@ public abstract class AbstractEntity implements Serializable{
 	public void setModificationDate(LocalDateTime modificationDate) {
 		this.modificationDate = modificationDate;
 	}
-	public Long getVersion() {
+	/*public Long getVersion() {
 		return version;
 	}
 	public void setVersion(Long version) {
 		this.version = version;
-	}
+	}*/
 }

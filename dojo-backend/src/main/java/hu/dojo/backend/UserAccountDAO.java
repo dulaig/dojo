@@ -68,8 +68,9 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+		String sql = "UPDATE ua SET deleted = true WHERE ua.id"+" % "+id;
+		TypedQuery<UserAccount> query = entityManager.createQuery(sql,UserAccount.class);
+		
 	}
 
 }
