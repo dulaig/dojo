@@ -27,6 +27,6 @@ public class DojoUI extends UI {
 	protected void init(VaadinRequest request) {		
 		Navigator navigator = new Navigator(this, this);
 		navigator.addProvider(viewProvider);
-		navigator.navigateTo("userList");
+		navigator.navigateTo("userList");		
 	}
 }

@@ -3,5 +3,8 @@
 	<persistence-unit name="dojo-jpa">
 		<jta-data-source>java:/dojoDS</jta-data-source>
 		<class>hu.dojo.jpa.UserAccount</class>
+		<class>hu.dojo.jpa.AbstractEntity</class>
+		<class>hu.dojo.jpa.Train</class>
+		<class>hu.dojo.jpa.Trip</class>
 	</persistence-unit>
 </persistence>

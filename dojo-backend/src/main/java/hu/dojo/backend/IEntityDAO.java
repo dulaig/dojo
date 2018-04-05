@@ -6,12 +6,14 @@ import java.util.Map;
 
 import javax.ejb.Local;
 
+import hu.dojo.jpa.AbstractEntity;
+import hu.dojo.jpa.Train;
 import hu.dojo.jpa.UserAccount;
 
 @Local
-public interface IEntityDAO<T> extends Serializable{
+public interface IEntityDAO<T extends AbstractEntity> extends Serializable{
 
-	List<UserAccount> Label = null;
+	List<UserAccount> Label = null;	
 
 	public List<T> fetchMultiple(Map<String, Object> filterData);
 

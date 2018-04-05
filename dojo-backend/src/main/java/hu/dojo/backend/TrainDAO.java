@@ -11,30 +11,30 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import hu.dojo.jpa.UserAccount;
+import hu.dojo.jpa.Train;
 
 @Stateless
-public class UserAccountDAO implements IEntityDAO<UserAccount> {
+public class TrainDAO implements IEntityDAO<Train>{
 
 	@PersistenceContext(unitName="dojo-jpa")
 	private EntityManager entityManager;
 	
 	@Override
-	public List<UserAccount> fetchMultiple(Map<String, Object> filterData) {
-		String sql ="SELECT ua FROM UserAccount ua ";		
+	public List<Train> fetchMultiple(Map<String, Object> filterData){
+		String sql ="SELECT t FROM Train t ";		
 		if(filterData.size()>0) {
 			sql += " WHERE ";
 			Iterator it = filterData.entrySet().iterator();
 			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				sql += "ua. " + key + " LIKE :" + key + " ";
+				sql += "t. " + key + " LIKE :" + key + " ";
 				if(it.hasNext()) {
 					sql += " AND ";
 				}
 			}
 		}		
-		TypedQuery<UserAccount> query = entityManager.createQuery(sql, UserAccount.class);
+		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
 		if(filterData.size()>0) {
 			sql += " WHERE ";
 			Iterator it = filterData.entrySet().iterator();
@@ -46,34 +46,29 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 			}
 		}	
 		
-		List<UserAccount> resultList = query.getResultList();
+		List<Train> resultList = query.getResultList();
 		if(resultList == null || resultList.size() < 1) {
-			return new ArrayList<UserAccount>();
+			return new ArrayList<Train>();
 		}
 		return resultList;
-	}
+		
+	}	
 
 	@Override
-	public UserAccount fetch(Long id) {
-		String sql = "SELECT ua FROM UserAccount ua ";
-		if(id != null) {
-			sql += "WHERE ua.ID = " + id;
-		}
-		TypedQuery<UserAccount> query = entityManager.createQuery(sql, UserAccount.class);
-		UserAccount result = query.getSingleResult();
-		return result;		
-	}
-
-	@Override
-	public void persist(UserAccount entity) {
+	public Train fetch(Long id) {
 		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public void persist(Train entity) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
 }
