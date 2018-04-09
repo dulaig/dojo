@@ -11,9 +11,6 @@ import hu.dojo.jpa.UserAccount;
 
 @Local
 public interface IEntityDAO<T extends AbstractEntity> extends Serializable{
-
-	List<UserAccount> Label = null;
-
 	public List<T> fetchMultiple(Map<String, Object> filterData);
 
 	public T fetch(Long id);
