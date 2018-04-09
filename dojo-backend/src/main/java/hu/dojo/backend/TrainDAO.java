@@ -27,20 +27,20 @@ public class TrainDAO implements IEntityDAO<Train>{
 
 	@Override
 	public Train fetch(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Train train = entityManager.find(Train.class, id);
+		return train;
 	}
 
 	@Override
 	public void persist(Train entity) {
-		// TODO Auto-generated method stub
-		
+		entityManager.persist(entity);
+		entityManager.flush();		
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
+		entityManager.remove(fetch(id));
+		entityManager.flush();		
 	}
 
 }

@@ -7,12 +7,12 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 @CDIView("userList")
 public class UserAccountListView extends VerticalLayout implements View {
-
 	@Inject
 	private UserAccountGrid grid;
 	private Button add;
@@ -21,18 +21,17 @@ public class UserAccountListView extends VerticalLayout implements View {
 
 	@PostConstruct
 	private void init() {
+		setSizeFull();
 		HorizontalLayout buttons = new HorizontalLayout();
 		add = new Button("Add");
 		edit = new Button("Edit");
 		remove = new Button("Remove");
 		buttons.addComponents(add, edit, remove);
-		addComponents(buttons, grid);		
+		addComponents(buttons);
+		addComponentsAndExpand(grid);
 		
-		remove.addClickListener(new Button.ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				event.getButton().setCaption("Clicked");			
-			}
+		remove.addClickListener(listener -> {
+			Notification.show("CLICKED!");
 		});
 	}
 }

@@ -21,12 +21,15 @@ import hu.dojo.jpa.UserAccount;
 public class DojoUI extends UI {
 
 	@Inject
-	CDIViewProvider viewProvider;
-	
+	private CDIViewProvider viewProvider;
+	@Inject 	
+	private MainLayout mainLayout;
+
 	@Override
-	protected void init(VaadinRequest request) {		
-		Navigator navigator = new Navigator(this, this);
+	protected void init(VaadinRequest request) {
+		Navigator navigator = new Navigator(this, mainLayout.getContainer());
 		navigator.addProvider(viewProvider);
-		navigator.navigateTo("userList");
+		navigator.navigateTo("index");		
+		setContent(mainLayout);
 	}
 }
