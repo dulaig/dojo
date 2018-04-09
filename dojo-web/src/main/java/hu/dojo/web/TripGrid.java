@@ -6,11 +6,9 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 
-import org.eclipse.jdt.internal.core.CreateFieldOperation;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
@@ -20,29 +18,36 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import hu.dojo.backend.IEntityDAO;
 import hu.dojo.jpa.Train;
+import hu.dojo.jpa.Trip;
 
-public class TrainGrid extends Grid<Train>{
-	
-	private DataProvider<Train, String> dataProvider;
+public class TripGrid extends Grid<Trip>{
+
+	private DataProvider<Trip, String> dataProvider;
 	private Map<String, Object> filterData = new HashMap<String, Object>();
 	
-	@EJB(beanName = "TrainDAO")
-	private IEntityDAO<Train> dao;
+	@EJB(beanName = "TripDAO")
+	private IEntityDAO<Trip> dao;
 	
 	@PostConstruct
 	private void init() {
 		setSizeFull();
-		setBeanType(Train.class);
+		setBeanType(Trip.class);
 		initDataProvider();
 		initColums();
 	}
 	
 	private void initColums() {
-		addColumn(train -> train.getType()).setId("type").setCaption("Type").setHidable(true);
-		addColumn(train -> train.getColour()).setId("colour").setCaption("Colour").setHidable(true);
+		addColumn(trip -> trip.getTrain()).setId("train").setCaption("Train").setHidable(true);
+		addColumn(trip -> trip.getFrom()).setId("from").setCaption("From").setHidable(true);
+		addColumn(trip -> trip.getTo()).setId("to").setCaption("To").setHidable(true);
+		addColumn(trip -> trip.getDeparture()).setId("departure").setCaption("Departure").setHidable(true);
+		addColumn(trip -> trip.getArrival()).setId("arrival").setCaption("Arrival").setHidable(true);
 		HeaderRow filterRow = this.appendHeaderRow();
-		setFilterComponent(filterRow, "type");
-		setFilterComponent(filterRow, "colour");
+		setFilterComponent(filterRow, "train");
+		setFilterComponent(filterRow, "from");
+		setFilterComponent(filterRow, "to");
+		setFilterComponent(filterRow, "departure");
+		setFilterComponent(filterRow, "arrival");
 	}
 	
 	private void setFilterComponent(HeaderRow filterRow, String columnId) {

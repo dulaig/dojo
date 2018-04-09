@@ -55,13 +55,7 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
 	@Override
 	public UserAccount fetch(Long id) {
-		String sql = "SELECT ua FROM UserAccount ua ";
-		if(id != null) {
-			sql += "WHERE ua.ID = " + id;
-		}
-		TypedQuery<UserAccount> query = entityManager.createQuery(sql, UserAccount.class);
-		UserAccount result = query.getSingleResult();
-		return result;		
+		return null;	
 	}
 
 	@Override
@@ -72,8 +66,8 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+		
+		
 	}
 
 }

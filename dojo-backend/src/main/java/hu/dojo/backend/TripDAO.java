@@ -53,7 +53,6 @@ public class TripDAO implements IEntityDAO<Trip>{
 
 	@Override
 	public Trip fetch(Long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -65,7 +64,7 @@ public class TripDAO implements IEntityDAO<Trip>{
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
