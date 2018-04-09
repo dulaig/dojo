@@ -1,6 +1,7 @@
 package hu.dojo.jpa;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -12,78 +13,60 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 @MappedSuperclass
-public abstract class AbstractEntity implements Serializable {
-
+public abstract class AbstractEntity implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5888211897222795299L;
-
+	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) /*AUTO-INCREMENT SQL-BEN*/
 	private Long id;
-
-	@Column(name = "CREATION_DATE")
+	@Column(name="CREATION_DATE")
 	private LocalDateTime creationDate;
-
-	@Column(name = "MODIFICATION_DATE")
+	@Column(name="MODIFICATION_DATE")
 	private LocalDateTime modificationDate;
-
-	@Column
+	@Column(name="VERSION")
 	private Long version;
-
-	@Column
+	@Column(name="DELETED")
 	private boolean deleted;
-
-	// INSERT
-	@PrePersist
+	
+	@PrePersist /*Minden insert-nél lefut*/
 	private void prePersist() {
 		creationDate = LocalDateTime.now();
 	}
-
-	// UPDATE
-	@PreUpdate
+	@PreUpdate /*Minden update-nél lefut*/
 	private void preUpdate() {
 		modificationDate = LocalDateTime.now();
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(LocalDateTime creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public LocalDateTime getModificationDate() {
-		return modificationDate;
-	}
-
-	public void setModificationDate(LocalDateTime modificationDate) {
-		this.modificationDate = modificationDate;
-	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
-
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
+	}
+	public LocalDateTime getModificationDate() {
+		return modificationDate;
+	}
+	public void setModificationDate(LocalDateTime modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 }

@@ -3,11 +3,10 @@
 	<persistence-unit name="dojo-jpa">
 		<jta-data-source>java:/dojoDS</jta-data-source>
 		<class>hu.dojo.jpa.AbstractEntity</class>
-		<class>hu.dojo.jpa.Train</class>
 		<class>hu.dojo.jpa.Trip</class>
 		<class>hu.dojo.jpa.UserAccount</class>
 		<properties>
-			<property name="eclipselink.jdbc.batch-writing" value="None"/>
+			<property name="eclipselink.jdbc.batch-writing" value="none"></property>
 		</properties>
 	</persistence-unit>
 </persistence>

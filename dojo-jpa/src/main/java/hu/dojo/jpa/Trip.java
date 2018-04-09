@@ -13,30 +13,16 @@ public class Trip extends AbstractEntity {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8936952848607809715L;
-
-	@Column
-	private Train train;
+	private static final long serialVersionUID = 1L;
 
 	@Column
 	private String from;
-
 	@Column
 	private String to;
-
 	@Column
 	private LocalDateTime departure;
-
 	@Column
 	private LocalDateTime arrival;
-
-	public Train getTrain() {
-		return train;
-	}
-
-	public void setTrain(Train train) {
-		this.train = train;
-	}
 
 	public String getFrom() {
 		return from;
@@ -69,4 +55,5 @@ public class Trip extends AbstractEntity {
 	public void setArrival(LocalDateTime arrival) {
 		this.arrival = arrival;
 	}
+
 }

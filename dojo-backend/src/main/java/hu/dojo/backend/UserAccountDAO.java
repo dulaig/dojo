@@ -16,39 +16,38 @@ import hu.dojo.jpa.UserAccount;
 @Stateless
 public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
-	@PersistenceContext(unitName = "dojo-jpa")
-	private EntityManager entityManger;
-
-	// "SELECT ua FROM UserAccount ua WHERE ua.email LIKE :email"
+	@PersistenceContext(unitName="dojo-jpa")
+	private EntityManager entityManager;
+	
 	@Override
 	public List<UserAccount> fetchMultiple(Map<String, Object> filterData) {
-		String sql = "SELECT ua FROM UserAccount ua ";
-		if (filterData.size() > 0) {
+		String sql ="SELECT ua FROM UserAccount ua ";		
+		if(filterData.size()>0) {
 			sql += " WHERE ";
 			Iterator it = filterData.entrySet().iterator();
-			while (it.hasNext()) {
+			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				sql += "ua." + key + " LIKE :" + key + " ";
-				if (it.hasNext()) {
+				sql += "ua. " + key + " LIKE :" + key + " ";
+				if(it.hasNext()) {
 					sql += " AND ";
 				}
 			}
-		}
-		TypedQuery<UserAccount> query = entityManger.createQuery(sql, UserAccount.class);
-
-		if (filterData.size() > 0) {
+		}		
+		TypedQuery<UserAccount> query = entityManager.createQuery(sql, UserAccount.class);
+		if(filterData.size()>0) {
 			sql += " WHERE ";
 			Iterator it = filterData.entrySet().iterator();
-			while (it.hasNext()) {
+			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				Object value = entry.getValue();
-				query.setParameter(key, "%" + value + "%");
+				Object value  = entry.getValue();
+				query.setParameter(key,"%" + value + "%");
 			}
-		}
+		}	
+		
 		List<UserAccount> resultList = query.getResultList();
-		if (resultList == null || resultList.size() < 1) {
+		if(resultList == null || resultList.size() < 1) {
 			return new ArrayList<UserAccount>();
 		}
 		return resultList;
@@ -57,6 +56,7 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 	@Override
 	public UserAccount fetch(Long id) {
 		// TODO Auto-generated method stub
+			
 		return null;
 	}
 
@@ -68,8 +68,9 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+		String sql = "UPDATE ua SET deleted = true WHERE ua.id"+" % "+id;
+		TypedQuery<UserAccount> query = entityManager.createQuery(sql,UserAccount.class);
+		
 	}
 
 }
