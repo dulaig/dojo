@@ -6,8 +6,10 @@ import java.util.Map;
 
 import javax.ejb.Local;
 
+import hu.dojo.jpa.AbstractEntity;
+
 @Local
-public interface IEntityDAO<T> extends Serializable {
+public interface IEntityDAO<T extends AbstractEntity> extends Serializable {
 
 	public List<T> fetchMultiple(Map<String, Object> filterData);
 
