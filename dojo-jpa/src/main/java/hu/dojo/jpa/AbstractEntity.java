@@ -30,11 +30,11 @@ public abstract class AbstractEntity implements Serializable{
 	@Column(name="DELETED")
 	private boolean deleted;
 	
-	@PrePersist /*Minden insert-nél lefut*/
+	@PrePersist /*Minden insert-nï¿½l lefut*/
 	private void prePersist() {
 		creationDate = LocalDateTime.now();
 	}
-	@PreUpdate /*Minden update-nél lefut*/
+	@PreUpdate /*Minden update-nï¿½l lefut*/
 	private void preUpdate() {
 		modificationDate = LocalDateTime.now();
 	}
