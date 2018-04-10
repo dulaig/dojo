@@ -11,17 +11,17 @@ import javax.persistence.TypedQuery;
 import hu.dojo.jpa.Train;
 import hu.dojo.jpa.Trip;
 
-public class TripDAO implements IEntityDAO<Trip>{
+public class TripDAO implements IEntityDAO<Trip> {
 
-	@PersistenceContext(unitName="dojo-jpa")
+	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManager;
-	
+
 	@Override
 	public List<Trip> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Trip t";
-		TypedQuery<Trip> query = entityManager.createQuery(sql,Trip.class);
+		TypedQuery<Trip> query = entityManager.createQuery(sql, Trip.class);
 		List<Trip> trainList = query.getResultList();
-		if(trainList != null && trainList.size() > 0)
+		if (trainList != null && trainList.size() > 0)
 			return trainList;
 		return new ArrayList<Trip>();
 	}
@@ -35,13 +35,13 @@ public class TripDAO implements IEntityDAO<Trip>{
 	@Override
 	public void persist(Trip entity) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

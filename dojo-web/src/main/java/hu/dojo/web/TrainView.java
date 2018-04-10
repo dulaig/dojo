@@ -13,7 +13,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @CDIView("trainList")
-public class TrainView extends VerticalLayout implements View{
+public class TrainView extends VerticalLayout implements View {
 	@PostConstruct
 	private void init() {
 		setSizeFull();

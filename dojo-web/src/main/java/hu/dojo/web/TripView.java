@@ -9,7 +9,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @CDIView("tripList")
-public class TripView extends VerticalLayout implements View{
+public class TripView extends VerticalLayout implements View {
 
 	@PostConstruct
 	private void init() {

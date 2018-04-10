@@ -22,14 +22,14 @@ public class DojoUI extends UI {
 
 	@Inject
 	private CDIViewProvider viewProvider;
-	@Inject 	
+	@Inject
 	private MainLayout mainLayout;
 
 	@Override
 	protected void init(VaadinRequest request) {
 		Navigator navigator = new Navigator(this, mainLayout.getContainer());
 		navigator.addProvider(viewProvider);
-		navigator.navigateTo("index");		
+		navigator.navigateTo("index");
 		setContent(mainLayout);
 	}
 }

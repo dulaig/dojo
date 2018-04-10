@@ -10,17 +10,17 @@ import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.Train;
 
-public class TrainDAO implements IEntityDAO<Train>{
-	
-	@PersistenceContext(unitName="dojo-jpa")
+public class TrainDAO implements IEntityDAO<Train> {
+
+	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManager;
 
 	@Override
 	public List<Train> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Train t";
-		TypedQuery<Train> query = entityManager.createQuery(sql,Train.class);
+		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
 		List<Train> trainList = query.getResultList();
-		if(trainList != null && trainList.size() > 0)
+		if (trainList != null && trainList.size() > 0)
 			return trainList;
 		return new ArrayList<Train>();
 	}
@@ -34,13 +34,13 @@ public class TrainDAO implements IEntityDAO<Train>{
 	@Override
 	public void persist(Train entity) {
 		entityManager.persist(entity);
-		entityManager.flush();		
+		entityManager.flush();
 	}
 
 	@Override
 	public void delete(Long id) {
 		entityManager.remove(fetch(id));
-		entityManager.flush();		
+		entityManager.flush();
 	}
 
 }

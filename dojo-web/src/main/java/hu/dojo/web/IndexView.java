@@ -16,9 +16,9 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @CDIView("index")
 public class IndexView extends VerticalLayout implements View {
-	
+
 	String mode;
-	
+
 	@PostConstruct
 	private void init() {
 		setSizeFull();
@@ -26,7 +26,7 @@ public class IndexView extends VerticalLayout implements View {
 		TextField email, firstname, lastname;
 		FormLayout form = new FormLayout();
 		Label title = new Label("Login / Sign Up");
-		title.setStyleName(ValoTheme.LABEL_H4);		
+		title.setStyleName(ValoTheme.LABEL_H4);
 		email = new TextField("Email");
 		firstname = new TextField("Firstname");
 		lastname = new TextField("Lastname");

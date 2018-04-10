@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_ACCOUNT")
-public class UserAccount extends AbstractEntity{
+public class UserAccount extends AbstractEntity {
 
 	/**
 	 * 
