@@ -14,7 +14,7 @@ public class TripView extends VerticalLayout implements View{
 	@PostConstruct
 	private void init() {
 		setSizeFull();
-		Label label = new Label("This is TrainList!!");
+		Label label = new Label("This is TripList!!");
 		label.setPrimaryStyleName(ValoTheme.LABEL_H1);
 		addComponent(label);
 	}
