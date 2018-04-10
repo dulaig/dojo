@@ -22,13 +22,12 @@ public class UserAccountListView extends VerticalLayout implements View{
 	
 	@PostConstruct
 	private void init() {
-		setSizeFull();
 		HorizontalLayout buttons = new HorizontalLayout();
 		add = new Button("Add");
 		edit = new Button("Edit");
 		remove = new Button("Remove");
 		buttons.addComponents(add, edit, remove);
-		addComponentsAndExpand(buttons,grid);
+		addComponents(buttons,grid);
 		
 		remove.addClickListener(listener ->{
 			Notification.show("Clicked!");
