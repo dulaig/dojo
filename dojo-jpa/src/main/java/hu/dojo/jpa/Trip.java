@@ -15,13 +15,13 @@ public class Trip extends AbstractEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column
+	@Column(name = "CITY_FROM")
 	private String from;
-	@Column
+	@Column(name = "CITY_TO")
 	private String to;
-	@Column
+	@Column(name = "DEPARTURE")
 	private LocalDateTime departure;
-	@Column
+	@Column(name = "ARRIVAL")
 	private LocalDateTime arrival;
 
 	public String getFrom() {

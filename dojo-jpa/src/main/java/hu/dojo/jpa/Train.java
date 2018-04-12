@@ -12,10 +12,10 @@ public class Train extends AbstractEntity {
 	@Column(name = "SERIAL_CODE")
 	private String serialCode;
 
-	@Column
+	@Column(name = "TYPE")
 	private TrainType type;
 
-	@Column
+	@Column(name = "COLOUR")
 	private Colour colour;
 
 	public String getSerialCode() {
