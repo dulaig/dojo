@@ -1,8 +1,10 @@
 package hu.dojo.backend;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -26,11 +28,35 @@ public class TrainDAO implements IEntityDAO<Train> {
 	@Override
 	public List<Train> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Train t";
+		if (filterData.size() > 0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				sql += "t. " + key + " LIKE :" + key + " ";
+				if (it.hasNext()) {
+					sql += " AND ";
+				}
+			}
+		}
 		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
-		List<Train> trainList = query.getResultList();
-		if (trainList != null && trainList.size() > 0)
-			return trainList;
-		return new ArrayList<Train>();
+		if (filterData.size() > 0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				Object value = entry.getValue();
+				query.setParameter(key, "%" + value + "%");
+			}
+		}
+
+		List<Train> resultList = query.getResultList();
+		if (resultList == null || resultList.size() < 1) {
+			return new ArrayList<Train>();
+		}
+		return resultList;
 	}
 
 	@Override
