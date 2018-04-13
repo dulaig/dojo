@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 
-import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.ui.Component;
@@ -21,6 +20,10 @@ import hu.dojo.jpa.UserAccount;
 
 public class UserAccountGrid extends Grid<UserAccount> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private DataProvider<UserAccount, String> dataProvider;
 	private Map<String, Object> filterData = new HashMap<String, Object>();
 

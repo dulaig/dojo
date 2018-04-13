@@ -1,7 +1,11 @@
 package hu.dojo.jpa;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "TRAIN")
 public class Train extends AbstractEntity {
 
 	/**

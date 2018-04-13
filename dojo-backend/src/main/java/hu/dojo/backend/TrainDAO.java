@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.Train;
 
+@Stateless
+@Remote(Train.class)
 public class TrainDAO implements IEntityDAO<Train> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManager;
 

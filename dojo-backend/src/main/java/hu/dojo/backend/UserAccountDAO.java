@@ -16,6 +16,7 @@ import hu.dojo.jpa.UserAccount;
 @Stateless
 public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
+	private static final long serialVersionUID = 1L;
 	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManager;
 

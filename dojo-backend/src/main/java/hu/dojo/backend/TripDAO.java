@@ -20,9 +20,9 @@ public class TripDAO implements IEntityDAO<Trip> {
 	public List<Trip> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Trip t";
 		TypedQuery<Trip> query = entityManager.createQuery(sql, Trip.class);
-		List<Trip> trainList = query.getResultList();
-		if (trainList != null && trainList.size() > 0)
-			return trainList;
+		List<Trip> tripList = query.getResultList();
+		if (tripList != null && tripList.size() > 0)
+			return tripList;
 		return new ArrayList<Trip>();
 	}
 

@@ -14,11 +14,20 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @CDIView("trainList")
 public class TrainView extends VerticalLayout implements View {
+	
+	@Inject
+	private TrainGrid grid;
+	private Button add;
+	private Button edit;
+	private Button remove;
+	
 	@PostConstruct
 	private void init() {
-		setSizeFull();
-		Label label = new Label("This is TrainList!!");
-		label.setPrimaryStyleName(ValoTheme.LABEL_H1);
-		addComponent(label);
+		HorizontalLayout buttons = new HorizontalLayout();
+		add = new Button("Add");
+		edit = new Button("Edit");
+		remove = new Button("Remove");
+		buttons.addComponents(add, edit, remove);
+		addComponents(buttons, grid);
 	}
 }
