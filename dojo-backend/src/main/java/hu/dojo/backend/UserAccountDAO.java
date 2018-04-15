@@ -55,18 +55,21 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 
 	@Override
 	public UserAccount fetch(Long id) {
-		return null;	
-	}
+		UserAccount user = entityManager.find(UserAccount.class, id);
+		return user;
+	}		
 
 	@Override
 	public void persist(UserAccount entity) {
-		// TODO Auto-generated method stub
+		entityManager.persist(entity);
+		entityManager.flush();
 
 	}
 
 	@Override
 	public void delete(Long id) {
-		
+		entityManager.remove(fetch(id));
+		entityManager.flush();
 		
 	}
 

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.Trip;
 
+@Stateless
 public class TripDAO implements IEntityDAO<Trip>{
 
 	@PersistenceContext(unitName="dojo-jpa")
@@ -53,18 +55,21 @@ public class TripDAO implements IEntityDAO<Trip>{
 
 	@Override
 	public Trip fetch(Long id) {
-		return null;
+		Trip trip = entityManager.find(Trip.class, id);
+		return trip;
 	}
 
 	@Override
 	public void persist(Trip entity) {
-		// TODO Auto-generated method stub
+		entityManager.persist(entity);
+		entityManager.flush();
 		
 	}
 
 	@Override
 	public void delete(Long id) {
-		
+		entityManager.remove(fetch(id));
+		entityManager.flush();
 		
 	}
 
