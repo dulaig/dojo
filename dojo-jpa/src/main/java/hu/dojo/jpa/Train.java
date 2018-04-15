@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "TRAIN")
 public class Train extends AbstractEntity{
 
 	/**
@@ -14,9 +14,9 @@ public class Train extends AbstractEntity{
 	private static final long serialVersionUID = 2179285967804246815L;
 	@Column(name = "SERIAL_CODE")
 	private String serialCode;
-	@Column
+	@Column(name = "TYPE")
 	private TrainType type;
-	@Column
+	@Column(name = "COLOUR")
 	private Colour colour;
 	
 	public String getSerialCode() {

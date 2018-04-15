@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name="TRIP")
 public class Trip extends AbstractEntity{
 
 	/**

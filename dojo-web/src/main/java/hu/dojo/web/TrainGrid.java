@@ -38,9 +38,11 @@ public class TrainGrid extends Grid<Train>{
 	}
 	
 	private void initColums() {
+		addColumn(train -> train.getSerialCode()).setId("serialcode").setCaption("Serial Code").setHidable(true);
 		addColumn(train -> train.getType()).setId("type").setCaption("Type").setHidable(true);
 		addColumn(train -> train.getColour()).setId("colour").setCaption("Colour").setHidable(true);
 		HeaderRow filterRow = this.appendHeaderRow();
+		setFilterComponent(filterRow, "serialcode");
 		setFilterComponent(filterRow, "type");
 		setFilterComponent(filterRow, "colour");
 	}
