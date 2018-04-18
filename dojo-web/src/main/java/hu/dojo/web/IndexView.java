@@ -17,6 +17,10 @@ import com.vaadin.ui.themes.ValoTheme;
 @CDIView("index")
 public class IndexView extends VerticalLayout implements View {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String mode;
 
 	@PostConstruct
@@ -44,6 +48,7 @@ public class IndexView extends VerticalLayout implements View {
 				mode = "register";
 				form.removeComponent(buttons);
 				form.addComponents(firstname, lastname, buttons);
+				login.setCaption("Back");
 			} else {
 				Notification.show("Sign up!");
 			}
@@ -55,6 +60,7 @@ public class IndexView extends VerticalLayout implements View {
 				mode = "login";
 				form.removeComponent(lastname);
 				form.removeComponent(firstname);
+				login.setCaption("Login");
 			}
 		});
 	}

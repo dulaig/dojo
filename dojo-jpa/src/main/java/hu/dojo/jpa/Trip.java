@@ -7,14 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "TRIP")
 public class Trip extends AbstractEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	@Column(name = "TRAIN_ID")
+	private int trainId;
 	@Column(name = "CITY_FROM")
 	private String from;
 	@Column(name = "CITY_TO")
@@ -23,6 +25,14 @@ public class Trip extends AbstractEntity {
 	private LocalDateTime departure;
 	@Column(name = "ARRIVAL")
 	private LocalDateTime arrival;
+
+	public int getTrainId() {
+		return trainId;
+	}
+
+	public void setTrainId(int trainId) {
+		this.trainId = trainId;
+	}
 
 	public String getFrom() {
 		return from;
@@ -40,16 +50,16 @@ public class Trip extends AbstractEntity {
 		this.to = to;
 	}
 
-	public LocalDateTime getDeparture() {
-		return departure;
+	public String getDeparture() {
+		return departure.toString().substring(11);
 	}
 
 	public void setDeparture(LocalDateTime departure) {
 		this.departure = departure;
 	}
 
-	public LocalDateTime getArrival() {
-		return arrival;
+	public String getArrival() {
+		return arrival.toString().substring(11);
 	}
 
 	public void setArrival(LocalDateTime arrival) {
