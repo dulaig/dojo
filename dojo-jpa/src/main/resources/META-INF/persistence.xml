@@ -6,5 +6,6 @@
 		<class>hu.dojo.jpa.AbstractEntity</class>
 		<class>hu.dojo.jpa.Train</class>
 		<class>hu.dojo.jpa.Trip</class>
+		<class>hu.dojo.jpa.SessionData</class>
 	</persistence-unit>
 </persistence>
