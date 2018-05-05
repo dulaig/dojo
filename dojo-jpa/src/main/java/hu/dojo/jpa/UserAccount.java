@@ -2,16 +2,19 @@ package hu.dojo.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_ACCOUNT")
-public class UserAccount extends AbstractEntity {
-
+public class UserAccount  extends AbstractEntity{
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8910291877329629546L;
 
 	@Column(nullable = false, unique = true, name = "EMAIL_ADDRESS")
 	private String emailAddress;
@@ -23,7 +26,7 @@ public class UserAccount extends AbstractEntity {
 	private String firstname;
 
 	@Column
-	private String lastname;
+	private String lastname;	
 
 	public String getEmailAddress() {
 		return emailAddress;

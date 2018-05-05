@@ -1,31 +1,59 @@
 package hu.dojo.backend;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 
-import hu.dojo.jpa.Train;
 import hu.dojo.jpa.Trip;
 
 @Stateless
-@Remote(Trip.class)
-public class TripDAO implements IEntityDAO<Trip> {
+public class TripDAO implements IEntityDAO<Trip>{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	@PersistenceContext(unitName = "dojo-jpa")
+	@PersistenceContext(unitName="dojo-jpa")
 	private EntityManager entityManager;
-
+	
+	@Override
+	public List<Trip> fetchMultiple(Map<String, Object> filterData) {
+		String sql ="SELECT t FROM Trip t ";		
+		if(filterData.size()>0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while(it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				sql += "t. " + key + " LIKE :" + key + " ";
+				if(it.hasNext()) {
+					sql += " AND ";
+				}
+			}
+		}		
+		TypedQuery<Trip> query = entityManager.createQuery(sql, Trip.class);
+		if(filterData.size()>0) {
+			sql += " WHERE ";
+			Iterator it = filterData.entrySet().iterator();
+			while(it.hasNext()) {
+				Entry<String, Object> entry = (Entry<String, Object>) it.next();
+				String key = entry.getKey();
+				Object value  = entry.getValue();
+				query.setParameter(key,"%" + value + "%");
+			}
+		}	
+		
+		List<Trip> resultList = query.getResultList();
+		if(resultList == null || resultList.size() < 1) {
+			return new ArrayList<Trip>();
+		}
+		return resultList;
+	}
+	
+	/*
 	@Override
 	public List<Trip> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Trip t";
@@ -34,24 +62,26 @@ public class TripDAO implements IEntityDAO<Trip> {
 		if (tripList != null && tripList.size() > 0)
 			return tripList;
 		return new ArrayList<Trip>();
-	}
+	}*/
 
 	@Override
 	public Trip fetch(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Trip trip = entityManager.find(Trip.class, id);
+		return trip;
 	}
 
 	@Override
 	public void persist(Trip entity) {
-		// TODO Auto-generated method stub
-
+		entityManager.persist(entity);
+		entityManager.flush();
+		
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+		entityManager.remove(fetch(id));
+		entityManager.flush();
+		
 	}
 
 }

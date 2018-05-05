@@ -7,31 +7,35 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TRIP")
-public class Trip extends AbstractEntity {
+@Table(name="TRIP")
+public class Trip extends AbstractEntity{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8936952848607809715L;
 	
-	@Column(name = "TRAIN_ID")
-	private int trainId;
-	@Column(name = "CITY_FROM")
+	@Column(name="TRAIN_ID")
+	private int train;
+	
+	@Column(name="CITY_FROM")
 	private String from;
-	@Column(name = "CITY_TO")
+	
+	@Column(name="CITY_TO")
 	private String to;
-	@Column(name = "DEPARTURE")
+	
+	@Column(name="DEPARTURE")
 	private LocalDateTime departure;
-	@Column(name = "ARRIVAL")
+	
+	@Column(name="ARRIVAL")
 	private LocalDateTime arrival;
 
-	public int getTrainId() {
-		return trainId;
+	public int getTrain() {
+		return train;
 	}
 
-	public void setTrainId(int trainId) {
-		this.trainId = trainId;
+	public void setTrain(int train) {
+		this.train = train;
 	}
 
 	public String getFrom() {
@@ -66,4 +70,7 @@ public class Trip extends AbstractEntity {
 		this.arrival = arrival;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 }
