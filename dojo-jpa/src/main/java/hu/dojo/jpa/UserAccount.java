@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_ACCOUNT")
-public class UserAccount  extends AbstractEntity{
-	
+public class UserAccount extends AbstractEntity {
+
 	/**
 	 * 
 	 */
@@ -26,7 +26,14 @@ public class UserAccount  extends AbstractEntity{
 	private String firstname;
 
 	@Column
-	private String lastname;	
+	private String lastname;
+
+	@Column
+	private boolean deleted;
+
+	public boolean getDeleted() {
+		return deleted;
+	}
 
 	public String getEmailAddress() {
 		return emailAddress;

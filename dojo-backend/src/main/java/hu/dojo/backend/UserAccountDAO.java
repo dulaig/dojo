@@ -21,9 +21,9 @@ public class UserAccountDAO implements IEntityDAO<UserAccount> {
 	
 	@Override
 	public List<UserAccount> fetchMultiple(Map<String, Object> filterData) {
-		String sql ="SELECT ua FROM UserAccount ua ";		
+		String sql ="SELECT ua FROM UserAccount ua WHERE ua.deleted = 0 ";		
 		if(filterData.size()>0) {
-			sql += " WHERE ";
+			sql += " AND ";
 			Iterator it = filterData.entrySet().iterator();
 			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();

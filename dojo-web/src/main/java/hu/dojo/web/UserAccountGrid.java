@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
