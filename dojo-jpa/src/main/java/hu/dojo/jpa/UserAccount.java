@@ -30,6 +30,10 @@ public class UserAccount extends AbstractEntity {
 
 	@Column
 	private boolean deleted;
+	
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public boolean getDeleted() {
 		return deleted;
