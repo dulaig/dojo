@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
@@ -21,9 +22,6 @@ import hu.dojo.jpa.UserAccount;
 @CDIView("userList")
 public class UserAccountListView extends VerticalLayout implements View {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	@Inject
 	private UserAccountGrid grid;
@@ -53,11 +51,8 @@ public class UserAccountListView extends VerticalLayout implements View {
 				Set<UserAccount> selectedItems = grid.getSelectedItems();
 				List<UserAccount> users = selectedItems.stream().collect(Collectors.toList());
 				if (remove.userRemove(users)) {
-					removeComponent(grid);
-					grid.setSelectionMode(SelectionMode.NONE);
-					addComponentsAndExpand(grid);
 					Notification.show("Success delete!");
-					hide = true;
+					grid.getDataProvider().refreshAll();
 				}else
 					Notification.show("Failed delete!");
 			}

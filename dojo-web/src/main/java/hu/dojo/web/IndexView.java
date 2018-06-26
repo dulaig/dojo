@@ -145,7 +145,7 @@ public class IndexView extends VerticalLayout implements View {
 			sendregister.setVisible(true);
 			UserAccount newUser = new UserAccount();
 			registerBinder.setBean(newUser);
-			registerBinder.forField(firstnameField).withValidator(new StringLengthValidator("Too short!", 4, 50))
+			registerBinder.forField(firstnameField).withValidator(new StringLengthValidator("Too short!", 3, 50))
 					.bind(UserAccount::getFirstname, UserAccount::setFirstname);
 			registerBinder.forField(lastnameField).withValidator(new StringLengthValidator("Too short!", 4, 50))
 					.bind(UserAccount::getLastname, UserAccount::setLastname);
