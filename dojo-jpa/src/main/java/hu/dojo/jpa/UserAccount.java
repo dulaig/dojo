@@ -1,5 +1,7 @@
 package hu.dojo.jpa;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +32,7 @@ public class UserAccount extends AbstractEntity {
 
 	@Column
 	private boolean deleted;
-	
+			
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
