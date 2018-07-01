@@ -35,7 +35,6 @@ public class UserAccountListView extends VerticalLayout implements View {
 	private Button removeBtn;
 	private Remover remover;
 	private Editor editor;
-	private Window window;
 
 	@PostConstruct
 	private void init() {
@@ -45,9 +44,6 @@ public class UserAccountListView extends VerticalLayout implements View {
 		removeBtn = new Button("Remove");
 		remover = new Remover();
 		editor = new Editor();
-		window = new Window("Editor");
-		window.center();
-		window.setResizable(false);
 		buttons.addComponents(editBtn, removeBtn);
 		grid.setSelectionMode(SelectionMode.MULTI);
 		addComponents(buttons);
@@ -68,52 +64,14 @@ public class UserAccountListView extends VerticalLayout implements View {
 			Set<UserAccount> selectedItems = grid.getSelectedItems();
 			List<UserAccount> users = selectedItems.stream().collect(Collectors.toList());
 			if (users.size() > 0) {
-				window.setContent(editorContent(users.get(0)));
-				UI.getCurrent().addWindow(window);
+				//Táblázat átalakítása bemeneti mezõkkel
 			} else
 				Notification.show("No item selected!");
 		});
 	}
-
-	private VerticalLayout editorContent(UserAccount user) {
-		VerticalLayout layout = new VerticalLayout();
-		TextField email = new TextField("Email adress: ");
-		email.setValue(user.getEmailAddress());
-		TextField firstname = new TextField("Firstname: ");
-		firstname.setValue(user.getFirstname());
-		TextField lastname = new TextField("Lastname: ");
-		lastname.setValue(user.getLastname());
-		UserAccount newUser = new UserAccount();
-		Button saveBtn = new Button("Save", event -> {
-			lastname.setComponentError(null);
-			email.setComponentError(null);
-			firstname.setComponentError(null);
-			if (validEmail(email.getValue())) {
-				newUser.setEmailAddress(email.getValue());
-				if (firstname.getValue().length() > 3 && firstname.getValue().length() < 50) {
-					newUser.setFirstname(firstname.getValue());
-					if (lastname.getValue().length() > 3 && lastname.getValue().length() < 50) {
-						newUser.setLastname(lastname.getValue());
-						newUser.setId(user.getId());
-						if (editor.editUser(newUser)) {
-							Notification.show("The changes saved!");
-							UI.getCurrent().removeWindow(window);
-							grid.getDataProvider().refreshAll();
-							grid.deselectAll();
-						} else
-							Notification.show("The changes not saved!");
-					} else
-						lastname.setComponentError(new UserError("The surname must have 3 to 50 characters!"));
-				} else
-					firstname.setComponentError(new UserError("The first name must be between 3 and 50 character!"));
-			} else
-				email.setComponentError(new UserError("This doesn't look like a valid email address"));
-		});
-		Button cancelBtn = new Button("Cancel", event -> UI.getCurrent().removeWindow(window));
-		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.addComponents(saveBtn, cancelBtn);
-		layout.addComponents(email, firstname, lastname, buttons);
-		return layout;
+	
+	private void changeTableCell() {
+		
 	}
 
 	private boolean validEmail(String email) {
