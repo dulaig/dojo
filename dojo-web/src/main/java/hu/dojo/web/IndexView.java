@@ -1,9 +1,5 @@
 package hu.dojo.web;
 
-
-
-
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -43,88 +39,89 @@ public class IndexView extends VerticalLayout implements View {
 
 	@EJB(beanName = "Authentication")
 	private Authentication auth;
-	
+
 	private Button login;
 	private Button register;
 	private Button sendregister;
 	private Button back;
 	private Label name;
-	private MessageDigest digest;	
+	private MessageDigest digest;
 	private ErrorMessage firstnameMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			return "Firstname is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			return null;
 		}
 	};
 	private ErrorMessage lastnameMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			return "Lastname is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			return null;
 		}
 	};
 	private ErrorMessage passwordMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			return "Password is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			return null;
 		}
 	};
 	private ErrorMessage emailMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			return "Email is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			return null;
 		}
 	};
-	private ErrorMessage loginMessage = new ErrorMessage(){
-		
+	private ErrorMessage loginMessage = new ErrorMessage() {
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			return "Invalid credentials!";
 		}
-		
+
 		public ErrorLevel getErrorLevel() {
 			return null;
 		}
 	};
-	
+
 	@PostConstruct
 	private void init() {
 		setSizeFull();
 		VerticalLayout authFields = new VerticalLayout();
-		HorizontalLayout buttonFields = new HorizontalLayout();		
-	/*	Label label = new Label("This is Thomas!");
-		label.setPrimaryStyleName(ValoTheme.LABEL_H1);
-		addComponent(label);*/
+		HorizontalLayout buttonFields = new HorizontalLayout();
+		/*
+		 * Label label = new Label("This is Thomas!");
+		 * label.setPrimaryStyleName(ValoTheme.LABEL_H1); addComponent(label);
+		 */
 		TextField emailField = new TextField("Email address:");
 		PasswordField passwordField = new PasswordField("Password:");
 		TextField lastnameField = new TextField("Last name");
 		TextField firstnameField = new TextField("First name");
 		lastnameField.setVisible(false);
 		firstnameField.setVisible(false);
-		login = new Button("Login");		
+		login = new Button("Login");
 		register = new Button("Register");
 		sendregister = new Button("Send");
 		back = new Button("Back");
@@ -138,102 +135,106 @@ public class IndexView extends VerticalLayout implements View {
 		buttonFields.addComponents(login, register, back, sendregister);
 		authFields.addComponents(firstnameField, lastnameField, emailField, passwordField, buttonFields, name);
 		addComponent(authFields);
-		
-		register.addClickListener(listener -> {			
+
+		register.addClickListener(listener -> {
 			firstnameField.setVisible(true);
 			lastnameField.setVisible(true);
 			login.setVisible(false);
 			register.setVisible(false);
 			back.setVisible(true);
-			sendregister.setVisible(true);			
-			UserAccount newUser = new UserAccount();			
+			sendregister.setVisible(true);
+			UserAccount newUser = new UserAccount();
 			registerBinder.setBean(newUser);
-			registerBinder.forField(firstnameField).withValidator(new StringLengthValidator("Too short!", 4, 50)).bind(UserAccount::getFirstname, UserAccount::setFirstname);
-			registerBinder.forField(lastnameField).withValidator(new StringLengthValidator("Too short!", 4, 50)).bind(UserAccount::getLastname, UserAccount::setLastname);
-			registerBinder.forField(emailField).withValidator(new EmailValidator("This doesn't look like a valid email address")).bind(UserAccount::getEmailAddress, UserAccount::setEmailAddress);
-			registerBinder.forField(passwordField).withValidator(new StringLengthValidator("Too short!", 7, 50)).bind(UserAccount::getPassword, UserAccount::setPassword);			
+			registerBinder.forField(firstnameField).withValidator(new StringLengthValidator("Too short!", 3, 50))
+					.bind(UserAccount::getFirstname, UserAccount::setFirstname);
+			registerBinder.forField(lastnameField).withValidator(new StringLengthValidator("Too short!", 4, 50))
+					.bind(UserAccount::getLastname, UserAccount::setLastname);
+			registerBinder.forField(emailField)
+					.withValidator(new EmailValidator("This doesn't look like a valid email address"))
+					.bind(UserAccount::getEmailAddress, UserAccount::setEmailAddress);
+			registerBinder.forField(passwordField).withValidator(new StringLengthValidator("Too short!", 7, 50))
+					.bind(UserAccount::getPassword, UserAccount::setPassword);
 		});
-		
+
 		sendregister.addClickListener(listener -> {
-			try {				
+			try {
 				String firstnameValue = firstnameField.getValue();
 				String lastnameValue = lastnameField.getValue();
-				String passwordValue = passwordField.getValue();				
-				String emailValue = emailField.getValue();					
+				String passwordValue = passwordField.getValue();
+				String emailValue = emailField.getValue();
 				digest = MessageDigest.getInstance("SHA-256");
 				byte[] hash = digest.digest(passwordValue.getBytes(StandardCharsets.UTF_8));
 				String encoded = Base64.getEncoder().encodeToString(hash);
-				if(firstnameValue == null || "".equals(firstnameValue)) {
+				if (firstnameValue == null || "".equals(firstnameValue)) {
 					sendregister.setComponentError(firstnameMessage);
-				}else if(lastnameValue == null || "".equals(lastnameValue)) {
+				} else if (lastnameValue == null || "".equals(lastnameValue)) {
 					sendregister.setComponentError(lastnameMessage);
-				}else if(emailValue == null || "".equals(emailValue)) {
+				} else if (emailValue == null || "".equals(emailValue)) {
 					sendregister.setComponentError(emailMessage);
-				}else if(passwordValue == null || "".equals(passwordValue)) {
+				} else if (passwordValue == null || "".equals(passwordValue)) {
 					sendregister.setComponentError(passwordMessage);
-				}else {				
+				} else {
 					UserAccount newUser = new UserAccount();
 					newUser.setFirstname(firstnameValue);
 					newUser.setLastname(lastnameValue);
 					newUser.setEmailAddress(emailValue);
 					newUser.setPassword(encoded);
-					if(registerBinder.validate().isOk()) {
+					if (registerBinder.validate().isOk()) {
 						auth.registration(newUser);
-						Notification.show("Success registration!");						
-					}else {
+						Notification.show("Success registration!");
+					} else {
 						Notification.show("Unsucces registration!");
 					}
 				}
-			}catch(NoSuchAlgorithmException e) {
+			} catch (NoSuchAlgorithmException e) {
 				System.err.println("I'm sorry, but SHA-256 is not a valid message digest algorithm");
 			}
-			
+
 		});
-		
+
 		login.addClickListener(listener -> {
-			try {				
-				String emailValue = emailField.getValue();							
-				String passwordValue = passwordField.getValue();				
+			try {
+				String emailValue = emailField.getValue();
+				String passwordValue = passwordField.getValue();
 				digest = MessageDigest.getInstance("SHA-256");
-				byte[] hash = digest.digest(passwordValue.getBytes(StandardCharsets.UTF_8));				
+				byte[] hash = digest.digest(passwordValue.getBytes(StandardCharsets.UTF_8));
 				String encoded = Base64.getEncoder().encodeToString(hash);
-				if(emailValue == null || "".equals(emailValue)) {
+				if (emailValue == null || "".equals(emailValue)) {
 					login.setComponentError(emailMessage);
-				}else if(passwordValue == null || "".equals(passwordValue)) {
+				} else if (passwordValue == null || "".equals(passwordValue)) {
 					login.setComponentError(passwordMessage);
-					//	}else if(auth.findUser(emailValue, passwordValue) == null){
-					//	login.setComponentError(loginMessage);			
-				}else{
-					//Integer szam = 4;
-					//Long id = new Long(szam);				
-					//UserAccount user = auth.fetch(id);
-					if(auth.findUser(emailValue, passwordValue) == null) {
+					// }else if(auth.findUser(emailValue, passwordValue) == null){
+					// login.setComponentError(loginMessage);
+				} else {
+					// Integer szam = 4;
+					// Long id = new Long(szam);
+					// UserAccount user = auth.fetch(id);
+					if (auth.findUser(emailValue, passwordValue) == null) {
 						name.setValue("User is null!");
-					}else {
+					} else {
 						UserAccount user = auth.findUser(emailValue, passwordValue);
-						//name.setValue(user.getFirstname() + " " + user.getLastname());
+						// name.setValue(user.getFirstname() + " " + user.getLastname());
 						name.setValue(encoded);
-						//((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
-						//((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
-						//((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
+						// ((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
+						// ((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
+						// ((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
 					}
-					//name.setValue(user.getFirstname());
-					/*if(user == null) {
-					name.setValue("User is null!");
-				}else {
-					name.setValue(user.getFirstname());				
-				}*/
-					//((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
-					//((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
-					//((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
-					
+					// name.setValue(user.getFirstname());
+					/*
+					 * if(user == null) { name.setValue("User is null!"); }else {
+					 * name.setValue(user.getFirstname()); }
+					 */
+					// ((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
+					// ((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
+					// ((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
+
 				}
-			}catch(NoSuchAlgorithmException e) {
+			} catch (NoSuchAlgorithmException e) {
 				System.err.println("I'm sorry, but SHA-256 is not a valid message digest algorithm");
 			}
 		});
-		
-		back.addClickListener(listener->{
+
+		back.addClickListener(listener -> {
 			lastnameField.setVisible(false);
 			firstnameField.setVisible(false);
 			sendregister.setVisible(false);

@@ -1,5 +1,7 @@
 package hu.dojo.jpa;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +11,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_ACCOUNT")
-public class UserAccount  extends AbstractEntity{
-	
+public class UserAccount extends AbstractEntity {
+
 	/**
 	 * 
 	 */
@@ -26,7 +28,18 @@ public class UserAccount  extends AbstractEntity{
 	private String firstname;
 
 	@Column
-	private String lastname;	
+	private String lastname;
+
+	@Column
+	private boolean deleted;
+			
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean getDeleted() {
+		return deleted;
+	}
 
 	public String getEmailAddress() {
 		return emailAddress;
