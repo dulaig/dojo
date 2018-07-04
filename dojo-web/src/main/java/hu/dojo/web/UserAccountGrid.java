@@ -68,6 +68,9 @@ public class UserAccountGrid extends Grid<UserAccount>{
 				query -> dao.fetchMultiple(filterData).size());
 		setDataProvider(dataProvider);
 	}
+	
+	
+	
 }
 
 
