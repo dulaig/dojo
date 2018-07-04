@@ -21,9 +21,9 @@ public class TripDAO implements IEntityDAO<Trip>{
 	
 	@Override
 	public List<Trip> fetchMultiple(Map<String, Object> filterData) {
-		String sql ="SELECT t FROM Trip t ";		
+		String sql ="SELECT t FROM Trip t WHERE t.deleted = 0";		
 		if(filterData.size()>0) {
-			sql += " WHERE ";
+			sql += " AND ";
 			Iterator it = filterData.entrySet().iterator();
 			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
