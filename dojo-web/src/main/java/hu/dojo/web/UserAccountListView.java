@@ -14,17 +14,14 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-import hu.dojo.backend.Editor;
 import hu.dojo.backend.Remover;
-import hu.dojo.jpa.AbstractEntity;
 import hu.dojo.jpa.UserAccount;
+import hu.dojo.jpa.AbstractEntity;
+import hu.dojo.backend.Editor;
 
 @CDIView("userList")
 public class UserAccountListView extends VerticalLayout implements View {
@@ -32,47 +29,85 @@ public class UserAccountListView extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1L;
 	@Inject
 	private UserAccountGrid grid;
-	private Button editBtn;
 	private Button removeBtn;
 	private Remover remover;
 	private Editor editor;
+	private boolean hide;
+	private TextField emailEditor, fnameEditor, lnameEditor;
 
 	@PostConstruct
 	private void init() {
 		setSizeFull();
-		HorizontalLayout buttons = new HorizontalLayout();
-		editBtn = new Button("Edit");
+		hide = true;
 		removeBtn = new Button("Remove");
 		remover = new Remover();
 		editor = new Editor();
-		buttons.addComponents(editBtn, removeBtn);
-		grid.setSelectionMode(SelectionMode.MULTI);		
-		addComponents(buttons);
+		grid.setSelectionMode(SelectionMode.NONE);
+		initEditor();
+		addComponent(removeBtn);
 		addComponentsAndExpand(grid);
-
+		
 		removeBtn.addClickListener(listener -> {
-			Set<UserAccount> selectedItems = grid.getSelectedItems();
-			List<AbstractEntity> users = selectedItems.stream().collect(Collectors.toList());
-			if (remover.entityRemove(users, "user")) {
-				grid.deselectAll();
-				Notification.show("Success delete!");
-				grid.getDataProvider().refreshAll();
-			} else
-				Notification.show("Failed delete!");
+			if (hide) {
+				grid.setSelectionMode(SelectionMode.MULTI);
+				hide = false;
+			} else {
+				Set<UserAccount> selectedItems = grid.getSelectedItems();
+				List<AbstractEntity> users = selectedItems.stream().collect(Collectors.toList());
+				if (remover.entityRemove(users, "user")) {
+					grid.deselectAll();
+					Notification.show("Success delete!");
+					grid.getDataProvider().refreshAll();
+					grid.setSelectionMode(SelectionMode.NONE);
+					hide = true;
+				} else
+					Notification.show("Failed delete!");
+			}
 		});
-
-		editBtn.addClickListener(listener -> {
-			Set<UserAccount> selectedItems = grid.getSelectedItems();
-			List<UserAccount> users = selectedItems.stream().collect(Collectors.toList());
-			if (users.size() > 0) {
-				//Táblázat átalakítása bemeneti mezõkkel
+		grid.getEditor().addSaveListener(listener -> {
+			UserAccount user = listener.getBean();
+			if (editor.editUser(user)) {
+				Notification.show("The changes have been saved.");
 			} else
-				Notification.show("No item selected!");
+				Notification.show("The changes not saved.");
 		});
 	}
-	
-	private void changeTableCell() {
-		
+
+	private void initEditor() {
+		emailEditor = new TextField();
+		fnameEditor = new TextField();
+		lnameEditor = new TextField();
+		emailEditor.addValueChangeListener(event -> { 
+			if(!validEmail(event.getValue())) {
+				emailEditor.setComponentError(new UserError("This doesn't look like a valid email address"));
+				grid.getEditor().setSaveCaption("");
+			}	else	{
+				emailEditor.setComponentError(null);
+				grid.getEditor().setSaveCaption("Save");
+			}
+		});
+		fnameEditor.addValueChangeListener(event -> { 
+			if(event.getValue().length() < 3 || event.getValue().length() > 50) {
+				fnameEditor.setComponentError(new UserError("The first name must be between 3 and 50 characters"));
+				grid.getEditor().setSaveCaption("");
+			}	else	{
+				fnameEditor.setComponentError(null);
+				grid.getEditor().setSaveCaption("Save");
+			}
+		});
+		lnameEditor.addValueChangeListener(event -> { 
+			if(event.getValue().length() < 3 || event.getValue().length() > 50) {
+				lnameEditor.setComponentError(new UserError("The last name must be between 3 and 50 characters"));
+				grid.getEditor().setSaveCaption("");
+			}	else	{
+				lnameEditor.setComponentError(null);
+				grid.getEditor().setSaveCaption("Save");
+			}
+		});
+		grid.getEditor().setEnabled(true);
+		grid.getColumn("emailAddress").setEditorComponent(emailEditor);
+		grid.getColumn("firstname").setEditorComponent(fnameEditor);
+		grid.getColumn("lastname").setEditorComponent(lnameEditor);
 	}
 
 	private boolean validEmail(String email) {

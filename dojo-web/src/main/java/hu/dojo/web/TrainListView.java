@@ -38,15 +38,14 @@ import hu.dojo.jpa.TrainType;
 import hu.dojo.jpa.UserAccount;
 
 @CDIView("trainList")
-public class TrainListView extends VerticalLayout implements View{
-			
+public class TrainListView extends VerticalLayout implements View {
+
 	@EJB(beanName = "TrainDAO")
 	private IEntityDAO<Train> dao;
-	
+
 	@Inject
 	private TrainGrid grid;
 	private Button addBtn;
-	private Button editBtn;
 	private Button removeBtn;
 	private Adder adder;
 	private Remover remover;
@@ -54,14 +53,15 @@ public class TrainListView extends VerticalLayout implements View{
 	private Window subWindow;
 	private VerticalLayout subContent;
 	private Button saveBtn;
+	private boolean hide;
 	private ErrorMessage serialMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			// TODO Auto-generated method stub
 			return "Serial code is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			// TODO Auto-generated method stub
@@ -69,13 +69,13 @@ public class TrainListView extends VerticalLayout implements View{
 		}
 	};
 	private ErrorMessage typeMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			// TODO Auto-generated method stub
 			return "Type is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			// TODO Auto-generated method stub
@@ -83,20 +83,20 @@ public class TrainListView extends VerticalLayout implements View{
 		}
 	};
 	private ErrorMessage colourMessage = new ErrorMessage() {
-		
+
 		@Override
 		public String getFormattedHtmlMessage() {
 			// TODO Auto-generated method stub
 			return "Colour is empty!";
 		}
-		
+
 		@Override
 		public ErrorLevel getErrorLevel() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 	};
-	
+
 	@PostConstruct
 	private void init() {
 		setSizeFull();
@@ -104,47 +104,58 @@ public class TrainListView extends VerticalLayout implements View{
 		subWindow = new Window("Add");
 		subContent = new VerticalLayout();
 		subWindow.setContent(subContent);
+		hide = true;
 		Binder<Train> trainBinder = new Binder<Train>();
 		TextField serialField = new TextField();
 		NativeSelect<TrainType> selectType = new NativeSelect<>("Type select");
 		selectType.setItems(TrainType.values());
+		selectType.setValue(TrainType.values()[0]);
+		selectType.setEmptySelectionAllowed(false);
 		NativeSelect<Colour> colour = new NativeSelect<>("Colour");
-		colour.setItems(Colour.values());				
+		colour.setItems(Colour.values());
+		colour.setValue(Colour.values()[0]);
+		colour.setEmptySelectionAllowed(false);
 		saveBtn = new Button("Save");
-		saveBtn.setSizeFull();		
-		subContent.addComponents(new Label("Serial code"), serialField, selectType, colour, saveBtn);		
+		saveBtn.setSizeFull();
+		subContent.addComponents(new Label("Serial code"), serialField, selectType, colour, saveBtn);
 		subWindow.center();
 		addBtn = new Button("Add");
-		editBtn = new Button("Edit");
 		removeBtn = new Button("Remove");
 		adder = new Adder();
-		remover = new Remover();		
+		remover = new Remover();
 		editor = new Editor();
-		buttons.addComponents(addBtn, editBtn, removeBtn);
-		grid.setSelectionMode(SelectionMode.MULTI);
+		buttons.addComponents(addBtn, removeBtn);
+		grid.setSelectionMode(SelectionMode.NONE);
 		addComponents(buttons);
 		addComponentsAndExpand(grid);
-		
+
 		removeBtn.addClickListener(listener -> {
-			Set<Train> selectedItems = grid.getSelectedItems();
-			List<AbstractEntity> trains = selectedItems.stream().collect(Collectors.toList());
-			if (remover.entityRemove(trains, "train")) {
-				grid.deselectAll();
-				Notification.show("Success delete!");
-				grid.getDataProvider().refreshAll();
-			} else
-				Notification.show("Failed delete!");
+			if (hide) {
+				grid.setSelectionMode(SelectionMode.MULTI);
+				hide = false;
+			} else {
+				Set<Train> selectedItems = grid.getSelectedItems();
+				List<AbstractEntity> trains = selectedItems.stream().collect(Collectors.toList());
+				if (remover.entityRemove(trains, "train")) {
+					grid.deselectAll();
+					Notification.show("Success delete!");
+					grid.getDataProvider().refreshAll();
+					grid.setSelectionMode(SelectionMode.NONE);
+					hide = true;
+				} else
+					Notification.show("Failed delete!");
+			}
 		});
-		
+
 		addBtn.addClickListener(listener -> {
 			UI.getCurrent().addWindow(subWindow);
 			Train newTrain = new Train();
 			trainBinder.setBean(newTrain);
 			trainBinder.forField(serialField).withValidator(new StringLengthValidator("Too short!", 3, 50))
-				.bind(Train::getSerialCode,Train::setSerialCode);	
-			
+					.bind(Train::getSerialCode, Train::setSerialCode);
+
 		});
-		
+
 		saveBtn.addClickListener(listener -> {
 			String serialValue = serialField.getValue();
 			TrainType typeValue = selectType.getValue();
@@ -159,10 +170,12 @@ public class TrainListView extends VerticalLayout implements View{
 				Train newTrain = new Train();
 				newTrain.setSerialCode(serialValue);
 				newTrain.setType(typeValue);
-				newTrain.setColour(colourValue);			
+				newTrain.setColour(colourValue);
 				if (trainBinder.validate().isOk()) {
 					dao.persist(newTrain);
+					UI.getCurrent().removeWindow(subWindow);
 					Notification.show("Success addition!");
+					grid.getDataProvider().refreshAll();
 				} else {
 					Notification.show("Unsucces addition!");
 				}
