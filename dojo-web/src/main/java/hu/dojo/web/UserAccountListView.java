@@ -14,13 +14,13 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import hu.dojo.backend.Remover;
 import hu.dojo.jpa.UserAccount;
+import hu.dojo.jpa.AbstractEntity;
 import hu.dojo.backend.Editor;
 
 @CDIView("userList")
@@ -46,14 +46,15 @@ public class UserAccountListView extends VerticalLayout implements View {
 		initEditor();
 		addComponent(removeBtn);
 		addComponentsAndExpand(grid);
+		
 		removeBtn.addClickListener(listener -> {
 			if (hide) {
 				grid.setSelectionMode(SelectionMode.MULTI);
 				hide = false;
 			} else {
 				Set<UserAccount> selectedItems = grid.getSelectedItems();
-				List<UserAccount> users = selectedItems.stream().collect(Collectors.toList());
-				if (remover.userRemove(users)) {
+				List<AbstractEntity> users = selectedItems.stream().collect(Collectors.toList());
+				if (remover.entityRemove(users, "user")) {
 					grid.deselectAll();
 					Notification.show("Success delete!");
 					grid.getDataProvider().refreshAll();
