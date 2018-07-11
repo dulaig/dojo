@@ -21,19 +21,19 @@ public class TrainDAO implements IEntityDAO<Train>{
 	
 	@Override
 	public List<Train> fetchMultiple(Map<String, Object> filterData){
-		String sql ="SELECT t FROM Train t WHERE t.deleted = 0";		
+		String sql ="SELECT t FROM Train t WHERE t.deleted = 0 ";		
 		if(filterData.size()>0) {
 			sql += " AND ";
 			Iterator it = filterData.entrySet().iterator();
 			while(it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				sql += "t. " + key + " LIKE :" + key + " ";
+				sql += "t.  " + key + " LIKE :" + key + " ";
 				if(it.hasNext()) {
 					sql += " AND ";
 				}
 			}
-		}		
+		}	
 		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
 		if(filterData.size()>0) {
 			sql += " WHERE ";
