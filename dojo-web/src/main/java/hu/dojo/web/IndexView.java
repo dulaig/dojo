@@ -179,10 +179,15 @@ public class IndexView extends VerticalLayout implements View {
 					newUser.setLastname(lastnameValue);
 					newUser.setEmailAddress(emailValue);
 					newUser.setPassword(encoded);
-					if (registerBinder.validate().isOk()) {
+					boolean validEmail = auth.validateEmail(newUser);
+					if (registerBinder.validate().isOk() && validEmail) {	
 						auth.registration(newUser);
 						Notification.show("Success registration!");
-					} else {
+					}
+					else if (!validEmail){
+						Notification.show("Unsucces registration, because this email is already used!");
+					}
+					else {
 						Notification.show("Unsucces registration!");
 					}
 				}
