@@ -13,6 +13,7 @@ import com.vaadin.data.Binder;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -47,13 +48,15 @@ public class TrainListView extends VerticalLayout implements View {
 	private TrainGrid grid;
 	private Button addBtn;
 	private Button removeBtn;
-	private Adder adder;
 	private Remover remover;
 	private Editor editor;
 	private Window subWindow;
 	private VerticalLayout subContent;
 	private Button saveBtn;
 	private boolean hide;
+	private TextField serialEdit;
+	private NativeSelect<TrainType> typeEdit;
+	private NativeSelect<Colour> colourEdit;
 	private ErrorMessage serialMessage = new ErrorMessage() {
 
 		@Override
@@ -106,6 +109,7 @@ public class TrainListView extends VerticalLayout implements View {
 		subWindow.setContent(subContent);
 		hide = true;
 		Binder<Train> trainBinder = new Binder<Train>();
+		initEditor();
 		TextField serialField = new TextField();
 		NativeSelect<TrainType> selectType = new NativeSelect<>("Type select");
 		selectType.setItems(TrainType.values());
@@ -121,13 +125,18 @@ public class TrainListView extends VerticalLayout implements View {
 		subWindow.center();
 		addBtn = new Button("Add");
 		removeBtn = new Button("Remove");
-		adder = new Adder();
 		remover = new Remover();
 		editor = new Editor();
 		buttons.addComponents(addBtn, removeBtn);
 		grid.setSelectionMode(SelectionMode.NONE);
 		addComponents(buttons);
 		addComponentsAndExpand(grid);
+		
+		grid.getEditor().addSaveListener(listener -> {
+			Train t = listener.getBean();
+			editor.editTrain(t);
+			Notification.show("The changes have been saved.");
+		});
 
 		removeBtn.addClickListener(listener -> {
 			if (hide) {
@@ -181,5 +190,27 @@ public class TrainListView extends VerticalLayout implements View {
 				}
 			}
 		});
+	}
+	private void initEditor() {
+		serialEdit = new TextField();
+		typeEdit = new NativeSelect<>();
+		typeEdit.setItems(TrainType.values());
+		typeEdit.setEmptySelectionAllowed(false);
+		colourEdit = new NativeSelect<>();
+		colourEdit.setItems(Colour.values());
+		colourEdit.setEmptySelectionAllowed(false);
+		serialEdit.addValueChangeListener(listener -> {
+			if(listener.getValue().length() < 3 || listener.getValue().length() > 50) {
+				serialEdit.setComponentError(new UserError("The serial code must be between 3 and 50 character!"));
+				grid.getEditor().setSaveCaption("");
+			}else {
+				serialEdit.setComponentError(null);
+				grid.getEditor().setSaveCaption("Save");
+			}
+		});	
+		grid.getEditor().setEnabled(true);
+		grid.getColumn("serialCode").setEditorComponent(serialEdit);
+		grid.getColumn("type").setEditorComponent(typeEdit);
+		grid.getColumn("colour").setEditorComponent(colourEdit);
 	}
 }

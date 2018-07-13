@@ -46,7 +46,7 @@ public class UserAccountListView extends VerticalLayout implements View {
 		initEditor();
 		addComponent(removeBtn);
 		addComponentsAndExpand(grid);
-		
+
 		removeBtn.addClickListener(listener -> {
 			if (hide) {
 				grid.setSelectionMode(SelectionMode.MULTI);
@@ -66,10 +66,8 @@ public class UserAccountListView extends VerticalLayout implements View {
 		});
 		grid.getEditor().addSaveListener(listener -> {
 			UserAccount user = listener.getBean();
-			if (editor.editUser(user)) {
-				Notification.show("The changes have been saved.");
-			} else
-				Notification.show("The changes not saved.");
+			editor.editUser(user);
+			Notification.show("The changes have been saved.");
 		});
 	}
 
@@ -77,29 +75,29 @@ public class UserAccountListView extends VerticalLayout implements View {
 		emailEditor = new TextField();
 		fnameEditor = new TextField();
 		lnameEditor = new TextField();
-		emailEditor.addValueChangeListener(event -> { 
-			if(!validEmail(event.getValue())) {
+		emailEditor.addValueChangeListener(event -> {
+			if (!validEmail(event.getValue())) {
 				emailEditor.setComponentError(new UserError("This doesn't look like a valid email address"));
 				grid.getEditor().setSaveCaption("");
-			}	else	{
+			} else {
 				emailEditor.setComponentError(null);
 				grid.getEditor().setSaveCaption("Save");
 			}
 		});
-		fnameEditor.addValueChangeListener(event -> { 
-			if(event.getValue().length() < 3 || event.getValue().length() > 50) {
+		fnameEditor.addValueChangeListener(event -> {
+			if (event.getValue().length() < 3 || event.getValue().length() > 50) {
 				fnameEditor.setComponentError(new UserError("The first name must be between 3 and 50 characters"));
 				grid.getEditor().setSaveCaption("");
-			}	else	{
+			} else {
 				fnameEditor.setComponentError(null);
 				grid.getEditor().setSaveCaption("Save");
 			}
 		});
-		lnameEditor.addValueChangeListener(event -> { 
-			if(event.getValue().length() < 3 || event.getValue().length() > 50) {
+		lnameEditor.addValueChangeListener(event -> {
+			if (event.getValue().length() < 3 || event.getValue().length() > 50) {
 				lnameEditor.setComponentError(new UserError("The last name must be between 3 and 50 characters"));
 				grid.getEditor().setSaveCaption("");
-			}	else	{
+			} else {
 				lnameEditor.setComponentError(null);
 				grid.getEditor().setSaveCaption("Save");
 			}
