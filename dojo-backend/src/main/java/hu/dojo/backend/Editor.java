@@ -9,32 +9,34 @@ import hu.dojo.jpa.Train;
 import hu.dojo.jpa.UserAccount;
 
 @Stateless
-public class Editor{
-	
+public class Editor {
+
 	EntityManagerFactory entityManagerFactory;
 	EntityManager entityManager;
-	
-	private void init() {
+
+	public Editor() {
 		entityManagerFactory = Persistence.createEntityManagerFactory("dojo-jpa");
 		entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 	}
-	
-	public void editUser(UserAccount user) {	
-		init();		
+
+	public void editUser(UserAccount user) {
 		UserAccount u = entityManager.find(UserAccount.class, user.getId());
 		u.setEmailAddress(user.getEmailAddress());
 		u.setFirstname(user.getFirstname());
 		u.setLastname(user.getLastname());
-		entityManager.getTransaction().commit();
-		entityManager.close();	
+		closeTransaction();
 	}
+
 	public void editTrain(Train train) {
-		init();
-		Train t = entityManager.find(Train.class,train.getId());
+		Train t = entityManager.find(Train.class, train.getId());
 		t.setSerialCode(train.getSerialCode());
 		t.setType(train.getType());
 		t.setColour(train.getColour());
+		closeTransaction();
+	}
+
+	private void closeTransaction() {
 		entityManager.getTransaction().commit();
 		entityManager.close();
 	}
