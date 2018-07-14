@@ -29,6 +29,17 @@ public class Trip extends AbstractEntity{
 	
 	@Column(name="ARRIVAL")
 	private LocalDateTime arrival;
+		
+	@Column(name="SERIAL_CODE")
+	private String serial_code;
+
+	public String getSerial_code() {
+		return serial_code;
+	}
+
+	public void setSerial_code(String serial_code) {
+		this.serial_code = serial_code;
+	}
 
 	public int getTrain() {
 		return train;
@@ -69,8 +80,5 @@ public class Trip extends AbstractEntity{
 	public void setArrival(LocalDateTime arrival) {
 		this.arrival = arrival;
 	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	
 }
