@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import hu.dojo.jpa.Train;
+import hu.dojo.jpa.Trip;
 import hu.dojo.jpa.UserAccount;
 
 @Stateless
@@ -33,6 +34,11 @@ public class Editor {
 		t.setSerialCode(train.getSerialCode());
 		t.setType(train.getType());
 		t.setColour(train.getColour());
+		closeTransaction();
+	}
+	
+	public void editTrip(Trip trip) {
+		Trip t = entityManager.find(Trip.class, trip.getId());
 		closeTransaction();
 	}
 

@@ -58,10 +58,9 @@ public class UserAccountListView extends VerticalLayout implements View {
 					grid.deselectAll();
 					Notification.show("Success delete!");
 					grid.getDataProvider().refreshAll();
-					grid.setSelectionMode(SelectionMode.NONE);
-					hide = true;
-				} else
-					Notification.show("Failed delete!");
+				}
+				hide = true;
+				grid.setSelectionMode(SelectionMode.NONE);
 			}
 		});
 		grid.getEditor().addSaveListener(listener -> {

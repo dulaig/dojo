@@ -76,8 +76,9 @@ public class TrainGrid extends Grid<Train> {
 		filter.setEmptySelectionAllowed(false);
 		filter.setHeight(85, Unit.PERCENTAGE);
 		filter.setWidth(100, Unit.PERCENTAGE);
-		filter.addValueChangeListener(listener ->{
-			filterData.put(columnId, listener.getValue());
+		filter.addValueChangeListener(listener -> {
+			filterData.put(columnId, "type".equals(columnId) ? TrainType.valueOf(listener.getValue()).ordinal()
+					: Colour.valueOf(listener.getValue()).ordinal());
 			dataProvider.refreshAll();
 		});
 		return filter;
