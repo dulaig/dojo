@@ -46,7 +46,7 @@ public class TrainDAO implements IEntityDAO<Train> {
 				query.setParameter(key, "%" + value + "%");
 			}
 		}
-
+		System.out.println("SQL LEKÉRÉS: "+sql);
 		List<Train> resultList = query.getResultList();
 		if (resultList == null || resultList.size() < 1) {
 			return new ArrayList<Train>();

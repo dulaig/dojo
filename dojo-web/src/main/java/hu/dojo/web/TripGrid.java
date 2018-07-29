@@ -19,6 +19,7 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.dojo.backend.IEntityDAO;
+import hu.dojo.backend.TrainDAO;
 import hu.dojo.backend.TripDAO;
 import hu.dojo.jpa.Trip;
 

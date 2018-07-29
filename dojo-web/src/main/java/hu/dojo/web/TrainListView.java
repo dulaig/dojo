@@ -14,6 +14,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -111,7 +112,7 @@ public class TrainListView extends VerticalLayout implements View {
 		subWindow.center();
 		hide = true;
 		Binder<Train> trainBinder = new Binder<Train>();
-		initEditor();
+
 		TextField serialField = new TextField();
 		NativeSelect<TrainType> selectType = new NativeSelect<>("Type select");
 		selectType.setItems(TrainType.values());
@@ -130,7 +131,10 @@ public class TrainListView extends VerticalLayout implements View {
 		editor = new Editor();
 		buttons.addComponents(addBtn, removeBtn);
 		grid.setSelectionMode(SelectionMode.NONE);
-		addComponents(buttons);
+		if (VaadinSession.getCurrent().getAttribute("user") != null) {
+			addComponents(buttons);
+			initEditor();
+		}
 		addComponentsAndExpand(grid);
 
 		grid.getEditor().addSaveListener(listener -> {

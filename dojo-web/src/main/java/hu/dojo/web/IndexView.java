@@ -21,6 +21,8 @@ import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -44,7 +46,6 @@ public class IndexView extends VerticalLayout implements View {
 	private Button register;
 	private Button sendregister;
 	private Button back;
-	private Label name;
 	private MessageDigest digest;
 	private ErrorMessage firstnameMessage = new ErrorMessage() {
 
@@ -111,10 +112,6 @@ public class IndexView extends VerticalLayout implements View {
 		setSizeFull();
 		VerticalLayout authFields = new VerticalLayout();
 		HorizontalLayout buttonFields = new HorizontalLayout();
-		/*
-		 * Label label = new Label("This is Thomas!");
-		 * label.setPrimaryStyleName(ValoTheme.LABEL_H1); addComponent(label);
-		 */
 		TextField emailField = new TextField("Email address:");
 		PasswordField passwordField = new PasswordField("Password:");
 		TextField lastnameField = new TextField("Last name");
@@ -127,13 +124,10 @@ public class IndexView extends VerticalLayout implements View {
 		back = new Button("Back");
 		back.setVisible(false);
 		sendregister.setVisible(false);
-		name = new Label();
-		name.setValue("");
-		name.setVisible(true);
 		Binder<UserAccount> registerBinder = new Binder<>();
 		Binder<UserAccount> loginBinder;
 		buttonFields.addComponents(login, register, back, sendregister);
-		authFields.addComponents(firstnameField, lastnameField, emailField, passwordField, buttonFields, name);
+		authFields.addComponents(firstnameField, lastnameField, emailField, passwordField, buttonFields);
 		addComponent(authFields);
 
 		register.addClickListener(listener -> {
@@ -198,44 +192,22 @@ public class IndexView extends VerticalLayout implements View {
 		});
 
 		login.addClickListener(listener -> {
+			String email = emailField.getValue();
+			String password = passwordField.getValue();
 			try {
-				String emailValue = emailField.getValue();
-				String passwordValue = passwordField.getValue();
 				digest = MessageDigest.getInstance("SHA-256");
-				byte[] hash = digest.digest(passwordValue.getBytes(StandardCharsets.UTF_8));
-				String encoded = Base64.getEncoder().encodeToString(hash);
-				if (emailValue == null || "".equals(emailValue)) {
-					login.setComponentError(emailMessage);
-				} else if (passwordValue == null || "".equals(passwordValue)) {
-					login.setComponentError(passwordMessage);
-					// }else if(auth.findUser(emailValue, passwordValue) == null){
-					// login.setComponentError(loginMessage);
-				} else {
-					// Integer szam = 4;
-					// Long id = new Long(szam);
-					// UserAccount user = auth.fetch(id);
-					if (auth.findUser(emailValue, passwordValue) == null) {
-						name.setValue("User is null!");
-					} else {
-						UserAccount user = auth.findUser(emailValue, passwordValue);
-						// name.setValue(user.getFirstname() + " " + user.getLastname());
-						name.setValue(encoded);
-						// ((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
-						// ((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
-						// ((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
-					}
-					// name.setValue(user.getFirstname());
-					/*
-					 * if(user == null) { name.setValue("User is null!"); }else {
-					 * name.setValue(user.getFirstname()); }
-					 */
-					// ((DojoUI)getUI()).sessionData.setEmail(user.getEmailAddress());
-					// ((DojoUI)getUI()).sessionData.setFirstName(user.getFirstname());
-					// ((DojoUI)getUI()).sessionData.setLastName(user.getLastname());
-
-				}
+				byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+				password = Base64.getEncoder().encodeToString(hash);
 			} catch (NoSuchAlgorithmException e) {
 				System.err.println("I'm sorry, but SHA-256 is not a valid message digest algorithm");
+			}			
+			UserAccount user = auth.findUser(email, password);
+			if(user == null) {
+				Notification.show("Invalid e-mail address or password!");
+			}else{
+				VaadinSession.getCurrent().setAttribute("user", user);
+				UserAccount u = (UserAccount) VaadinSession.getCurrent().getAttribute("user");
+				Page.getCurrent().reload();
 			}
 		});
 
