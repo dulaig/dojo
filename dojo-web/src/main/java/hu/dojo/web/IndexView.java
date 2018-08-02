@@ -128,7 +128,11 @@ public class IndexView extends VerticalLayout implements View {
 		Binder<UserAccount> loginBinder;
 		buttonFields.addComponents(login, register, back, sendregister);
 		authFields.addComponents(firstnameField, lastnameField, emailField, passwordField, buttonFields);
-		addComponent(authFields);
+		UserAccount u = (UserAccount) VaadinSession.getCurrent().getAttribute("user");
+		if (u != null) {
+			greetings(u);
+		} else
+			addComponent(authFields);
 
 		register.addClickListener(listener -> {
 			firstnameField.setVisible(true);
@@ -174,14 +178,12 @@ public class IndexView extends VerticalLayout implements View {
 					newUser.setEmailAddress(emailValue);
 					newUser.setPassword(encoded);
 					boolean validEmail = auth.validateEmail(newUser);
-					if (registerBinder.validate().isOk() && validEmail) {	
+					if (registerBinder.validate().isOk() && validEmail) {
 						auth.registration(newUser);
 						Notification.show("Success registration!");
-					}
-					else if (!validEmail){
+					} else if (!validEmail) {
 						Notification.show("Unsucces registration, because this email is already used!");
-					}
-					else {
+					} else {
 						Notification.show("Unsucces registration!");
 					}
 				}
@@ -200,13 +202,12 @@ public class IndexView extends VerticalLayout implements View {
 				password = Base64.getEncoder().encodeToString(hash);
 			} catch (NoSuchAlgorithmException e) {
 				System.err.println("I'm sorry, but SHA-256 is not a valid message digest algorithm");
-			}			
+			}
 			UserAccount user = auth.findUser(email, password);
-			if(user == null) {
+			if (user == null) {
 				Notification.show("Invalid e-mail address or password!");
-			}else{
-				VaadinSession.getCurrent().setAttribute("user", user);
-				UserAccount u = (UserAccount) VaadinSession.getCurrent().getAttribute("user");
+			} else {
+				VaadinSession.getCurrent().setAttribute("user", user);				
 				Page.getCurrent().reload();
 			}
 		});
@@ -219,5 +220,11 @@ public class IndexView extends VerticalLayout implements View {
 			login.setVisible(true);
 			register.setVisible(true);
 		});
+	}
+	private void greetings(UserAccount u) {
+		Label label = new Label();
+		label.setValue("Hello, "+u.getFirstname());
+		label.setPrimaryStyleName(ValoTheme.LABEL_LARGE);
+		addComponent(label);
 	}
 }
