@@ -3,6 +3,7 @@ package hu.dojo.backend;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.AbstractEntity;
@@ -21,10 +22,6 @@ public class Authentication extends AbstractEntity {
 	public void registration(UserAccount entity) {
 		entityManager.persist(entity);
 		entityManager.flush();
-	}
-
-	public void login() {
-
 	}
 
 	public UserAccount findUser(String email, String password) {

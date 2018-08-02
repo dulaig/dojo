@@ -2,13 +2,15 @@ package hu.dojo.web;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.persistence.Query;
 
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
@@ -17,7 +19,8 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.dojo.backend.IEntityDAO;
-import hu.dojo.jpa.Train;
+import hu.dojo.backend.TrainDAO;
+import hu.dojo.backend.TripDAO;
 import hu.dojo.jpa.Trip;
 
 public class TripGrid extends Grid<Trip>{

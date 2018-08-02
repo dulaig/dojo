@@ -5,13 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.Trip;
 
@@ -30,7 +28,7 @@ public class TripDAO implements IEntityDAO<Trip> {
 			while (it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				sql += "t. " + key + " LIKE :" + key + " ";
+				sql += "trip. " + key + " LIKE :" + key + " "; /*ITT MAJD MEG KELL NÉZNI, HOGY NEM-E A SERIAL_CODE-RA SZÛRÜNK*/
 				if (it.hasNext()) {
 					sql += " AND ";
 				}
@@ -47,13 +45,12 @@ public class TripDAO implements IEntityDAO<Trip> {
 				query.setParameter(key, "%" + value + "%");
 			}
 		}
-
 		List<Trip> resultList = query.getResultList();
 		if (resultList == null || resultList.size() < 1) {
 			return new ArrayList<Trip>();
 		}
 		return resultList;
-	}
+	}	
 
 	@Override
 	public Trip fetch(Long id) {
@@ -72,7 +69,6 @@ public class TripDAO implements IEntityDAO<Trip> {
 	public void delete(Long id) {
 		entityManager.remove(fetch(id));
 		entityManager.flush();
-
 	}
 
 }

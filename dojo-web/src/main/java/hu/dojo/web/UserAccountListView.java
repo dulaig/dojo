@@ -12,8 +12,10 @@ import javax.mail.internet.InternetAddress;
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.UserError;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -42,9 +44,12 @@ public class UserAccountListView extends VerticalLayout implements View {
 		removeBtn = new Button("Remove");
 		remover = new Remover();
 		editor = new Editor();
+		Object u = VaadinSession.getCurrent().getAttribute("user");
 		grid.setSelectionMode(SelectionMode.NONE);
-		initEditor();
-		addComponent(removeBtn);
+		if(u != null) {
+			initEditor();
+			addComponent(removeBtn);
+		}
 		addComponentsAndExpand(grid);
 
 		removeBtn.addClickListener(listener -> {
@@ -58,10 +63,9 @@ public class UserAccountListView extends VerticalLayout implements View {
 					grid.deselectAll();
 					Notification.show("Success delete!");
 					grid.getDataProvider().refreshAll();
-					grid.setSelectionMode(SelectionMode.NONE);
-					hide = true;
-				} else
-					Notification.show("Failed delete!");
+				}
+				hide = true;
+				grid.setSelectionMode(SelectionMode.NONE);
 			}
 		});
 		grid.getEditor().addSaveListener(listener -> {

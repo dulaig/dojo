@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
@@ -25,35 +26,59 @@ public class TripListView extends VerticalLayout implements View{
 
 	@Inject
 	private TripGrid grid;
-	private Button addBtn;
-	private Button editBtn;
-	private Button removeBtn;
+	private Button addBtn, removeBtn;
 	private Remover remover;
 	private Editor editor;
+	private boolean hide;
 	
 	@PostConstruct
 	private void init() {
 		setSizeFull();
 		HorizontalLayout buttons = new HorizontalLayout();
 		addBtn = new Button("Add");
-		editBtn = new Button("Edit");
 		removeBtn = new Button("Remove");
 		remover = new Remover();
-		editor = new Editor();		
-		buttons.addComponents(addBtn, editBtn, removeBtn);
-		grid.setSelectionMode(SelectionMode.MULTI);		
-		addComponents(buttons);
+		editor = new Editor();
+		hide = true;
+		buttons.addComponents(addBtn, removeBtn);
+		grid.setSelectionMode(SelectionMode.NONE);
+		if(VaadinSession.getCurrent().getAttribute("user") != null)
+			addComponents(buttons);
 		addComponentsAndExpand(grid);
 		
 		removeBtn.addClickListener(listener -> {
-			Set<Trip> selectedItems = grid.getSelectedItems();
-			List<AbstractEntity> trips = selectedItems.stream().collect(Collectors.toList());
-			if (remover.entityRemove(trips, "trip")) {
-				grid.deselectAll();
-				Notification.show("Success delete!");
-				grid.getDataProvider().refreshAll();
-			} else
-				Notification.show("Failed delete!");
+			if (hide) {
+				grid.setSelectionMode(SelectionMode.MULTI);
+				hide = false;
+			} else {
+				Set<Trip> selectedItems = grid.getSelectedItems();
+				List<AbstractEntity> trips = selectedItems.stream().collect(Collectors.toList());
+				if (remover.entityRemove(trips, "trip")) {
+					grid.deselectAll();
+					Notification.show("Success delete!");
+					grid.getDataProvider().refreshAll();
+				}
+				hide = true;
+				grid.setSelectionMode(SelectionMode.NONE);
+			}
 		});
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
