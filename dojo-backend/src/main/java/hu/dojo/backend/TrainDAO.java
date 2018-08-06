@@ -52,7 +52,6 @@ public class TrainDAO implements IEntityDAO<Train> {
 			return new ArrayList<Train>();
 		}
 		return resultList;
-
 	}
 
 	@Override
