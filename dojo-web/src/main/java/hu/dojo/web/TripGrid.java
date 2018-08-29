@@ -42,7 +42,7 @@ public class TripGrid extends Grid<Trip> {
 	}
 
 	private void initColums() {
-		addColumn(trip -> trip.getSerial_code()).setId("train").setCaption("Train").setHidable(true);
+		addColumn(trip -> trip.getSerial_code()).setId("train").setCaption("Serial Code").setHidable(true);
 		addColumn(trip -> trip.getFrom()).setId("from").setCaption("From").setHidable(true);
 		addColumn(trip -> trip.getTo()).setId("to").setCaption("To").setHidable(true);
 		addColumn(trip -> trip.getDeparture()).setId("departure").setCaption("Departure").setHidable(true);

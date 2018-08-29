@@ -2,6 +2,8 @@ package hu.dojo.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,8 +11,11 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.NativeSelect;
@@ -29,7 +34,8 @@ public class TrainGrid extends Grid<Train> {
 
 	private DataProvider<Train, String> dataProvider;
 	private Map<String, Object> filterData = new HashMap<String, Object>();
-
+	private ListDataProvider<Train> listProvider;
+	
 	@EJB(beanName = "TrainDAO")
 	private IEntityDAO<Train> dao;
 
@@ -41,7 +47,7 @@ public class TrainGrid extends Grid<Train> {
 		initColums();
 	}
 
-	private void initColums() {
+	private void initColums() {		
 		addColumn(train -> train.getSerialCode()).setId("serialCode").setCaption("Serial Code").setHidable(true);
 		addColumn(train -> train.getType()).setId("type").setCaption("Type").setHidable(true);
 		addColumn(train -> train.getColour()).setId("colour").setCaption("Colour").setHidable(true);
@@ -59,10 +65,11 @@ public class TrainGrid extends Grid<Train> {
 			headerCell.setComponent(createFilterField(columnId));
 	}
 
+	@SuppressWarnings("unchecked")
 	private Component createDropDown(String columnId) {
 		NativeSelect<String> filter;
 		ArrayList<String> items = new ArrayList<>();
-		if (columnId.equals("type")) {
+		if ("type".equals(columnId)) {
 			filter = new NativeSelect<>("Type filter");
 			items.add("All types");
 			items.addAll(Stream.of(TrainType.values()).map(TrainType::name).collect(Collectors.toList()));
@@ -76,14 +83,15 @@ public class TrainGrid extends Grid<Train> {
 		filter.setEmptySelectionAllowed(false);
 		filter.setHeight(85, Unit.PERCENTAGE);
 		filter.setWidth(100, Unit.PERCENTAGE);
-		filter.addValueChangeListener(listener -> {
-			filterData.put(columnId,
-					"type".equals(columnId)
-							? "All types".equals(TrainType.valueOf(listener.getValue())) ? ""
-									: TrainType.valueOf(listener.getValue()).ordinal()
-							: "All colours".equals(Colour.valueOf(listener.getValue())) ? ""
-									: Colour.valueOf(listener.getValue()).ordinal());
-			dataProvider.refreshAll();
+
+		filter.addValueChangeListener(event -> {
+			String value = event.getValue();
+			if("All".equals(value.substring(0, 3))) {
+				
+			}else if("type".equals(columnId)){
+				listProvider = (ListDataProvider<Train>) this.getDataProvider();
+				listProvider.setFilter(Train::getType, s -> caseInsensitiveContains(s, event.getValue()));
+			}
 		});
 		return filter;
 	}
@@ -104,4 +112,8 @@ public class TrainGrid extends Grid<Train> {
 				query -> dao.fetchMultiple(filterData).size());
 		setDataProvider(dataProvider);
 	}
+	
+	private Boolean caseInsensitiveContains(TrainType where, String what) {
+        return what.equals(where.toString());
+    }
 }
