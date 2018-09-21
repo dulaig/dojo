@@ -15,6 +15,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
@@ -26,13 +27,17 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import hu.dojo.backend.Adder;
+import hu.dojo.backend.Authentication;
 import hu.dojo.backend.Editor;
 import hu.dojo.backend.IEntityDAO;
 import hu.dojo.backend.Remover;
+import hu.dojo.backend.TrainDAO;
 import hu.dojo.jpa.AbstractEntity;
 import hu.dojo.jpa.Colour;
 import hu.dojo.jpa.Train;
 import hu.dojo.jpa.TrainType;
+import hu.dojo.jpa.UserAccount;
 
 @CDIView("trainList")
 public class TrainListView extends VerticalLayout implements View {

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import hu.dojo.jpa.Train;
+import hu.dojo.jpa.TrainType;
 
 @Stateless
 public class TrainDAO implements IEntityDAO<Train> {
@@ -29,10 +30,15 @@ public class TrainDAO implements IEntityDAO<Train> {
 			while (it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				sql += "t.  " + key + " LIKE :" + key + " ";
+				System.out.println(filterData);							
+				if(key == "type") {					
+					sql += "t. " + key + "= :" + key;					
+				}else {
+					sql += "t.  " + key + " LIKE :" + key + " ";						
+				}
 				if (it.hasNext()) {
 					sql += " AND ";
-				}
+				}				
 			}
 		}
 		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
@@ -42,15 +48,23 @@ public class TrainDAO implements IEntityDAO<Train> {
 			while (it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				Object value = entry.getValue();
-				query.setParameter(key, "%" + value + "%");
+				Object value = entry.getValue();				
+				if(key == "type") {					
+					int typeIndex = (int)value;					
+					TrainType[] typeArray = TrainType.values();					
+					query.setParameter(key, typeArray[typeIndex]);					
+				}else {
+					query.setParameter(key, "%" + value + "%");
+				}				
 			}
 		}
+		System.out.println("SQL LEKÉRÉS: "+sql);
 		List<Train> resultList = query.getResultList();
 		if (resultList == null || resultList.size() < 1) {
 			return new ArrayList<Train>();
 		}
 		return resultList;
+
 	}
 
 	@Override
