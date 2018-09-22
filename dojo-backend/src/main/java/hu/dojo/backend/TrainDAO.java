@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import hu.dojo.jpa.Colour;
 import hu.dojo.jpa.Train;
 import hu.dojo.jpa.TrainType;
 
@@ -24,20 +25,20 @@ public class TrainDAO implements IEntityDAO<Train> {
 	@Override
 	public List<Train> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Train t WHERE t.deleted = 0 ";
-		if (filterData.size() > 0 && (int)filterData.get("type") != -1) {
-			sql += " AND ";
-			Iterator it = filterData.entrySet().iterator();
-			while (it.hasNext()) {
-				Entry<String, Object> entry = (Entry<String, Object>) it.next();
-				String key = entry.getKey();
-				if(key == "type") {
+
+		if (filterData.size() > 0) {
+			int id = (int) (filterData.get("type") == null ? filterData.get("colour") : filterData.get("type"));
+			if (id != -1) {
+				sql += " AND ";
+				Iterator it = filterData.entrySet().iterator();
+				while (it.hasNext()) {
+					Entry<String, Object> entry = (Entry<String, Object>) it.next();
+					String key = entry.getKey();
 					sql += "t. " + key + "= :" + key;					
-				}else {
-					sql += "t.  " + key + " LIKE :" + key + " ";						
+					if (it.hasNext()) {
+						sql += " AND ";
+					}
 				}
-				if (it.hasNext()) {
-					sql += " AND ";
-				}				
 			}
 		}
 		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
@@ -47,14 +48,17 @@ public class TrainDAO implements IEntityDAO<Train> {
 			while (it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				Object value = entry.getValue();				
-				if("type".equals(key) && (int)value != -1) {				
-					int typeIndex = (int)value;					
-					TrainType[] typeArray = TrainType.values();					
-					query.setParameter(key, typeArray[typeIndex]);					
-				}else if("colour".equals(key)){
-					query.setParameter(key, "%" + value + "%");
-				}				
+				Object value = entry.getValue();
+				if ((int) value != -1) {
+					int index = (int) value;
+					Object[] array;
+					if ("type".equals(key))
+						array = TrainType.values();
+					else
+						array = Colour.values();
+					System.out.println("KEY: " + key + " VALUE: " + array[index]);
+					query.setParameter(key, array[index]);
+				}
 			}
 		}
 		List<Train> resultList = query.getResultList();
