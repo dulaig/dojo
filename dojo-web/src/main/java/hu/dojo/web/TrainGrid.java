@@ -79,9 +79,9 @@ public class TrainGrid extends Grid<Train> {
 		filter.addValueChangeListener(listener -> {
 			filterData.put(columnId,
 					"type".equals(columnId)
-							? "All types".equals(TrainType.valueOf(listener.getValue())) ? ""
+							? "All types".equals(listener.getValue()) ? -1
 									: TrainType.valueOf(listener.getValue()).ordinal()
-							: "All colours".equals(Colour.valueOf(listener.getValue())) ? ""
+							: "All colours".equals(listener.getValue()) ? -1
 									: Colour.valueOf(listener.getValue()).ordinal());
 			dataProvider.refreshAll();
 		});
