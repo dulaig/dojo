@@ -24,14 +24,13 @@ public class TrainDAO implements IEntityDAO<Train> {
 	@Override
 	public List<Train> fetchMultiple(Map<String, Object> filterData) {
 		String sql = "SELECT t FROM Train t WHERE t.deleted = 0 ";
-		if (filterData.size() > 0) {
+		if (filterData.size() > 0 && (int)filterData.get("type") != -1) {
 			sql += " AND ";
 			Iterator it = filterData.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
-				System.out.println(filterData);							
-				if(key == "type") {					
+				if(key == "type") {
 					sql += "t. " + key + "= :" + key;					
 				}else {
 					sql += "t.  " + key + " LIKE :" + key + " ";						
@@ -49,16 +48,15 @@ public class TrainDAO implements IEntityDAO<Train> {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
 				Object value = entry.getValue();				
-				if(key == "type") {					
+				if("type".equals(key) && (int)value != -1) {				
 					int typeIndex = (int)value;					
 					TrainType[] typeArray = TrainType.values();					
 					query.setParameter(key, typeArray[typeIndex]);					
-				}else {
+				}else if("colour".equals(key)){
 					query.setParameter(key, "%" + value + "%");
 				}				
 			}
 		}
-		System.out.println("SQL LEKÉRÉS: "+sql);
 		List<Train> resultList = query.getResultList();
 		if (resultList == null || resultList.size() < 1) {
 			return new ArrayList<Train>();
