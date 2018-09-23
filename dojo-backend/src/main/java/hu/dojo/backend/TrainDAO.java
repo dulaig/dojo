@@ -27,14 +27,21 @@ public class TrainDAO implements IEntityDAO<Train> {
 		String sql = "SELECT t FROM Train t WHERE t.deleted = 0 ";
 
 		if (filterData.size() > 0) {
-			int id = (int) (filterData.get("type") == null ? filterData.get("colour") : filterData.get("type"));
-			if (id != -1) {
+			Integer id = null;
+			if(filterData.get("type") != null || filterData.get("color") != null) {
+				id = (int) (filterData.get("type") == null ? filterData.get("colour") : filterData.get("type"));
+			}
+			if (id != null && id != -1 || filterData.get("serialCode") != null) {
 				sql += " AND ";
 				Iterator it = filterData.entrySet().iterator();
 				while (it.hasNext()) {
 					Entry<String, Object> entry = (Entry<String, Object>) it.next();
 					String key = entry.getKey();
-					sql += "t. " + key + "= :" + key;					
+					if(key == "serialCode") {
+						sql += "t. " + key + " LIKE :" + key;
+					}else {
+						sql += "t. " + key + "= :" + key;					
+					}
 					if (it.hasNext()) {
 						sql += " AND ";
 					}
@@ -49,15 +56,20 @@ public class TrainDAO implements IEntityDAO<Train> {
 				Entry<String, Object> entry = (Entry<String, Object>) it.next();
 				String key = entry.getKey();
 				Object value = entry.getValue();
-				if ((int) value != -1) {
-					int index = (int) value;
-					Object[] array;
-					if ("type".equals(key))
-						array = TrainType.values();
-					else
-						array = Colour.values();
-					System.out.println("KEY: " + key + " VALUE: " + array[index]);
-					query.setParameter(key, array[index]);
+				if (key == "serialCode" || (int) value != -1) {
+					if(key == "serialCode") {
+						query.setParameter(key, "%" + value + "%");
+					}else {
+						int index = (int) value;
+						Object[] array;
+						if ("type".equals(key))
+							array = TrainType.values();
+						else
+							array = Colour.values();
+						System.out.println("KEY: " + key + " VALUE: " + array[index]);
+					
+						query.setParameter(key, array[index]);
+					}
 				}
 			}
 		}
