@@ -28,7 +28,7 @@ public class TrainDAO implements IEntityDAO<Train> {
 
 		if (filterData.size() > 0) {
 			Integer id = null;
-			if(filterData.get("type") != null || filterData.get("color") != null) {
+			if(filterData.get("type") != null || filterData.get("colour") != null) {
 				id = (int) (filterData.get("type") == null ? filterData.get("colour") : filterData.get("type"));
 			}
 			if (id != null && id != -1 || filterData.get("serialCode") != null) {
