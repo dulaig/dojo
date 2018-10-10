@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,6 +18,11 @@ import hu.dojo.jpa.TrainType;
 @Stateless
 public class TrainDAO implements IEntityDAO<Train> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@PersistenceContext(unitName = "dojo-jpa")
 	private EntityManager entityManager;
 
@@ -27,8 +31,9 @@ public class TrainDAO implements IEntityDAO<Train> {
 		String sql = "SELECT t FROM Train t WHERE t.deleted = 0 ";
 
 		if (filterData.size() > 0) {
+			filterData = checkFilter(filterData);
 			Integer id = null;
-			if(filterData.get("type") != null || filterData.get("colour") != null) {
+			if (filterData.get("type") != null || filterData.get("colour") != null) {
 				id = (int) (filterData.get("type") == null ? filterData.get("colour") : filterData.get("type"));
 			}
 			if (id != null && id != -1 || filterData.get("serialCode") != null) {
@@ -37,10 +42,10 @@ public class TrainDAO implements IEntityDAO<Train> {
 				while (it.hasNext()) {
 					Entry<String, Object> entry = (Entry<String, Object>) it.next();
 					String key = entry.getKey();
-					if(key == "serialCode") {
+					if (key == "serialCode") {
 						sql += "t. " + key + " LIKE :" + key;
-					}else {
-						sql += "t. " + key + "= :" + key;					
+					} else {
+						sql += "t. " + key + "= :" + key;
 					}
 					if (it.hasNext()) {
 						sql += " AND ";
@@ -50,6 +55,7 @@ public class TrainDAO implements IEntityDAO<Train> {
 		}
 		TypedQuery<Train> query = entityManager.createQuery(sql, Train.class);
 		if (filterData.size() > 0) {
+
 			sql += " WHERE ";
 			Iterator it = filterData.entrySet().iterator();
 			while (it.hasNext()) {
@@ -57,17 +63,15 @@ public class TrainDAO implements IEntityDAO<Train> {
 				String key = entry.getKey();
 				Object value = entry.getValue();
 				if (key == "serialCode" || (int) value != -1) {
-					if(key == "serialCode") {
+					if (key == "serialCode") {
 						query.setParameter(key, "%" + value + "%");
-					}else {
+					} else {
 						int index = (int) value;
 						Object[] array;
 						if ("type".equals(key))
 							array = TrainType.values();
 						else
 							array = Colour.values();
-						System.out.println("KEY: " + key + " VALUE: " + array[index]);
-					
 						query.setParameter(key, array[index]);
 					}
 				}
@@ -78,7 +82,18 @@ public class TrainDAO implements IEntityDAO<Train> {
 			return new ArrayList<Train>();
 		}
 		return resultList;
+	}
 
+	private Map<String, Object> checkFilter(Map<String, Object> filterData) {
+		Object o = filterData.get("colour");
+		if (o == null || (int) o == -1) {
+			filterData.remove("colour");
+		}
+		o = filterData.get("type");
+		if (o == null || (int) o == -1) {
+			filterData.remove("type");
+		}
+		return filterData;
 	}
 
 	@Override
